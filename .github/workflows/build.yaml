@@ -32,5 +32,7 @@ jobs:
       - name: Test Project
         run: pnpm --recursive test
 
-      - name: Build App
-        run: pnpm --filter app exec vite build
+      - name: Build Project
+        run: |
+          pnpm --filter app exec vite build
+          pnpm --filter server exec tsc --project tsconfig.build.json
