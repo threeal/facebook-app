@@ -1,6 +1,6 @@
-# Facebook App
+# Festabook
 
-A web-based [Facebook](https://www.facebook.com/) clone built using [React](https://react.dev/).
+A secret project, hiding in plain sight.
 
 ## License
 
