@@ -5,13 +5,20 @@ pre-commit:
       run: pnpm install
 
     - name: fix formatting
-      run: pnpm prettier --write .
+      group:
+        parallel: true
+        jobs:
+          - name: root project
+            run: pnpm prettier --write .
+
+          - name: subprojects
+            run: pnpm --recursive exec prettier --write .
 
     - name: fix lint
-      run: pnpm eslint --fix
+      run: pnpm --recursive exec eslint --fix
 
     - name: check types
-      run: pnpm tsc --noEmit
+      run: pnpm --recursive exec tsc --noEmit
 
     - name: check diff
       run: git diff --exit-code pnpm-lock.yaml {staged_files}

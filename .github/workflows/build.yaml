@@ -5,8 +5,8 @@ on:
   push:
     branches: [main]
 jobs:
-  build-app:
-    name: Build App
+  build-project:
+    name: Build Project
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Project
@@ -19,16 +19,18 @@ jobs:
         run: pnpm install
 
       - name: Check Formatting
-        run: pnpm prettier --check .
+        run: |
+          pnpm prettier --check .
+          pnpm --recursive exec prettier --check .
 
       - name: Check Lint
-        run: pnpm eslint
+        run: pnpm --recursive exec eslint
 
       - name: Check Types
-        run: pnpm tsc --noEmit
+        run: pnpm --recursive exec tsc --noEmit
 
-      - name: Test App
-        run: pnpm test
+      - name: Test Project
+        run: pnpm --recursive test
 
       - name: Build App
-        run: pnpm vite build
+        run: pnpm --filter app exec vite build
