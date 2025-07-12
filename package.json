@@ -21,7 +21,7 @@
     "@types/react-dom": "^19.1.6",
     "@types/react-page-visibility": "^6.4.4",
     "@vitejs/plugin-react": "^4.6.0",
-    "eslint": "^9.29.0",
+    "eslint": "^9.31.0",
     "eslint-plugin-react": "^7.37.5",
     "jiti": "^2.4.2",
     "lefthook": "^1.11.14",
