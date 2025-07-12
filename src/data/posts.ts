@@ -10,6 +10,7 @@ export interface PostData {
   author: UserData;
   caption?: string;
   image?: string;
+  video?: string;
   reactions?: number;
   date: string;
 }
@@ -30,8 +31,10 @@ export const posts: PostData[] = [
   },
   {
     author: sitiNurhaliza,
-    image:
-      "https://images.unsplash.com/photo-1558979158-65a1eaa08691?w=500&h=400&fit=crop",
+    video:
+      "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+    caption: "Video lucu yang bikin ngakak! 😂",
+    reactions: 8,
     date: "29 Apr 2024",
   },
   {
