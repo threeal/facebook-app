@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
+import { InView } from "react-intersection-observer";
 import MuteIcon from "./MuteIcon";
 import UnmuteIcon from "./UnmuteIcon";
 import "./PostVideoContent.css";
@@ -8,17 +9,30 @@ export interface PostVideoContentProps {
 }
 
 const PostVideoContent: React.FC<PostVideoContentProps> = ({ video }) => {
+  const videoRef = useRef<HTMLVideoElement>(null);
+
   const [isMuted, setIsMuted] = useState(true);
 
   const onMuteToggle = () => {
     setIsMuted(!isMuted);
   };
 
+  const onInViewChange = (inView: boolean) => {
+    if (videoRef.current) {
+      if (inView) {
+        videoRef.current.currentTime = 0;
+        void videoRef.current.play();
+      } else {
+        videoRef.current.pause();
+      }
+    }
+  };
+
   return (
-    <div className="post-video">
+    <InView onChange={onInViewChange} className="post-video">
       <video
+        ref={videoRef}
         src={video}
-        autoPlay
         loop
         muted={isMuted}
         controls={false}
@@ -31,7 +45,7 @@ const PostVideoContent: React.FC<PostVideoContentProps> = ({ video }) => {
           <UnmuteIcon className="post-video-mute-icon" />
         )}
       </button>
-    </div>
+    </InView>
   );
 };
 
