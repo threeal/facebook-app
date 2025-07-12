@@ -7,6 +7,7 @@ import SendIcon from "./assets/send-icon.png";
 import ShareIcon from "./assets/share-icon.png";
 import CloseIcon from "./components/CloseIcon";
 import DetailsIcon from "./components/DetailsIcon";
+import PostVideoContent from "./components/PostVideoContent";
 import ReactionIcon from "./components/ReactionIcon";
 import PrivacyIcon from "./components/PrivacyIcon";
 import "./Post.css";
@@ -64,6 +65,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
           <img src={post.image} />
         </div>
       )}
+      {post.video && <PostVideoContent video={post.video} />}
       <div className="post-footer">
         {reactions > 0 && (
           <div className="post-interactions">
