@@ -16,3 +16,12 @@ updates:
       prefix: chore
     labels: []
     versioning-strategy: increase
+
+  - package-ecosystem: npm
+    directory: /app
+    schedule:
+      interval: daily
+    commit-message:
+      prefix: chore
+    labels: []
+    versioning-strategy: increase

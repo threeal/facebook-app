@@ -3,5 +3,4 @@
 !.npmrc
 !.prettier*
 
-dist/
 node_modules/
