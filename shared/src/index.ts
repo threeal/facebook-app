@@ -1,14 +1,12 @@
 import * as v from "valibot";
 
 export const postSchema = v.object({
-  author: v.object({
-    name: v.string(),
-    avatar: v.string(),
-  }),
-  caption: v.optional(v.string()),
-  image: v.optional(v.string()),
-  video: v.optional(v.string()),
-  reactions: v.optional(v.number()),
+  author_name: v.string(),
+  author_avatar: v.string(),
+  caption: v.nullable(v.string()),
+  image: v.nullable(v.string()),
+  video: v.nullable(v.string()),
+  reactions: v.number(),
   date: v.string(),
 });
 
