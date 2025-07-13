@@ -27,7 +27,7 @@ jobs:
         run: pnpm --recursive exec eslint
 
       - name: Check Types
-        run: pnpm --recursive exec tsc --noEmit
+        run: pnpm --recursive exec tsc
 
       - name: Test Project
         run: pnpm --recursive test
