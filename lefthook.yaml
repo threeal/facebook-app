@@ -18,7 +18,7 @@ pre-commit:
       run: pnpm --recursive exec eslint --fix
 
     - name: check types
-      run: pnpm --recursive exec tsc --noEmit
+      run: pnpm --recursive exec tsc
 
     - name: check diff
       run: git diff --exit-code pnpm-lock.yaml {staged_files}
