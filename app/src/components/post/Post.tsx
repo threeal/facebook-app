@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { PostData } from "../../data/posts";
+import type { PostData } from "../../types";
 import CommentIcon from "./assets/comment-icon.png";
 import LikeIcon from "./assets/like-icon.png";
 import LikeSolidIcon from "./assets/like-solid-icon.png";

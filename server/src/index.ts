@@ -1,8 +1,11 @@
 import Fastify from "fastify";
 import fastifyHttpProxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
+import apiRoute from "./api.js";
 
 const fastify = Fastify({ logger: true });
+
+fastify.register(apiRoute);
 
 if (process.env.APP_DIST_DIR) {
   fastify.register(fastifyStatic, {
