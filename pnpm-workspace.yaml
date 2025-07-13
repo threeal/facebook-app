@@ -1,6 +1,7 @@
 packages:
   - app
   - server
+  - shared
 
 onlyBuiltDependencies:
   - esbuild

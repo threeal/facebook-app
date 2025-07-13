@@ -1,8 +1,8 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
+import type { PostData } from "shared";
 import Post from "./components/post/Post";
 import "./index.css";
-import type { PostData } from "./types";
 
 const root = document.getElementById("root");
 if (root) {
