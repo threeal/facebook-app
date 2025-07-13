@@ -4,8 +4,11 @@ pre-commit:
     - name: install dependencies
       run: pnpm install
 
+    - name: build shared package
+      run: pnpm --filter shared exec tsc --project tsconfig.build.json
+
     - name: check types
-      run: pnpm --recursive exec tsc
+      run: pnpm --recursive --filter !shared exec tsc
 
     - name: fix formatting
       group:

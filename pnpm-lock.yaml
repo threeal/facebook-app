@@ -29,6 +29,9 @@ importers:
       react-page-visibility:
         specifier: ^7.0.0
         version: 7.0.0(react@19.1.0)
+      shared:
+        specifier: workspace:*
+        version: link:../shared
     devDependencies:
       '@eslint/js':
         specifier: ^9.31.0
@@ -96,6 +99,36 @@ importers:
       fastify:
         specifier: ^5.4.0
         version: 5.4.0
+      shared:
+        specifier: workspace:*
+        version: link:../shared
+    devDependencies:
+      '@eslint/js':
+        specifier: ^9.31.0
+        version: 9.31.0
+      '@tsconfig/node24':
+        specifier: ^24.0.1
+        version: 24.0.1
+      '@types/node':
+        specifier: ^24.0.13
+        version: 24.0.13
+      eslint:
+        specifier: ^9.31.0
+        version: 9.31.0(jiti@2.4.2)
+      jiti:
+        specifier: ^2.4.2
+        version: 2.4.2
+      prettier:
+        specifier: ^3.6.2
+        version: 3.6.2
+      typescript:
+        specifier: ~5.8.3
+        version: 5.8.3
+      typescript-eslint:
+        specifier: ^8.36.0
+        version: 8.36.0(eslint@9.31.0(jiti@2.4.2))(typescript@5.8.3)
+
+  shared:
     devDependencies:
       '@eslint/js':
         specifier: ^9.31.0

@@ -1,13 +1,9 @@
 {
-  "name": "server",
+  "name": "shared",
   "private": true,
   "type": "module",
-  "dependencies": {
-    "@fastify/http-proxy": "^11.3.0",
-    "@fastify/static": "^8.2.0",
-    "fastify": "^5.4.0",
-    "shared": "workspace:*"
-  },
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "devDependencies": {
     "@eslint/js": "^9.31.0",
     "@tsconfig/node24": "^24.0.1",
