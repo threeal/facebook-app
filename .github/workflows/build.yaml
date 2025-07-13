@@ -18,6 +18,12 @@ jobs:
       - name: Install Dependencies
         run: pnpm install
 
+      - name: Check Types
+        run: pnpm --recursive exec tsc
+
+      - name: Test Project
+        run: pnpm --recursive test
+
       - name: Check Formatting
         run: |
           pnpm prettier --check .
@@ -25,12 +31,6 @@ jobs:
 
       - name: Check Lint
         run: pnpm --recursive exec eslint
-
-      - name: Check Types
-        run: pnpm --recursive exec tsc
-
-      - name: Test Project
-        run: pnpm --recursive test
 
       - name: Build Project
         run: |

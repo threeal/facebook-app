@@ -4,6 +4,9 @@ pre-commit:
     - name: install dependencies
       run: pnpm install
 
+    - name: check types
+      run: pnpm --recursive exec tsc
+
     - name: fix formatting
       group:
         parallel: true
@@ -16,9 +19,6 @@ pre-commit:
 
     - name: fix lint
       run: pnpm --recursive exec eslint --fix
-
-    - name: check types
-      run: pnpm --recursive exec tsc
 
     - name: check diff
       run: git diff --exit-code pnpm-lock.yaml {staged_files}
