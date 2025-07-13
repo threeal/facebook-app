@@ -26,6 +26,8 @@
 }
 
 .post-video-mute-icon {
+  width: 30px;
+  height: 30px;
   fill: #fffeff;
   filter: drop-shadow(2px 2px 4px rgba(0, 0, 0, 0.5));
 }
