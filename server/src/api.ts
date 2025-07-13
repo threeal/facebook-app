@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify";
-import type { PostData } from "shared";
+import type { PostSchema } from "shared";
 
 export default function (fastify: FastifyInstance) {
-  fastify.get("/api/posts", (): PostData[] => {
+  fastify.get("/api/posts", (): PostSchema[] => {
     const amiraHassan = {
       name: "Amira Hasan",
       avatar:

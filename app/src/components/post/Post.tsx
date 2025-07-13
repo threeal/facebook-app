@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { PostData } from "shared";
+import type { PostSchema } from "shared";
 import CommentIcon from "./assets/comment-icon.png";
 import LikeIcon from "./assets/like-icon.png";
 import LikeSolidIcon from "./assets/like-solid-icon.png";
@@ -13,7 +13,7 @@ import PrivacyIcon from "./components/PrivacyIcon";
 import "./Post.css";
 
 export interface PostProps {
-  post: PostData;
+  post: PostSchema;
 }
 
 const Post: React.FC<PostProps> = ({ post }) => {

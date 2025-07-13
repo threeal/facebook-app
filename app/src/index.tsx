@@ -1,13 +1,14 @@
 import { StrictMode } from "react";
 import { createRoot } from "react-dom/client";
-import type { PostData } from "shared";
+import { postSchema } from "shared";
+import * as v from "valibot";
 import Post from "./components/post/Post";
 import "./index.css";
 
 const root = document.getElementById("root");
 if (root) {
   const res = await fetch("/api/posts");
-  const posts = (await res.json()) as PostData[];
+  const posts = v.parse(v.array(postSchema), await res.json());
 
   createRoot(root).render(
     <StrictMode>
