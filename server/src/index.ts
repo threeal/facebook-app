@@ -17,6 +17,7 @@ if (process.env.APP_DIST_DIR) {
   fastify.register(fastifyStatic, {
     root: process.env.APP_DIST_DIR,
     prefix: "/",
+    decorateReply: false,
   });
 }
 
