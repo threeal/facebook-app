@@ -1,8 +1,8 @@
 import React, { useRef, useState } from "react";
 import { InView } from "react-intersection-observer";
 import PageVisibility from "react-page-visibility";
-import MuteIcon from "./MuteIcon";
-import UnmuteIcon from "./UnmuteIcon";
+import MuteIcon from "./icons/MuteIcon";
+import UnmuteIcon from "./icons/UnmuteIcon";
 import "./PostVideoContent.css";
 
 export interface PostVideoContentProps {

@@ -2,7 +2,7 @@ import React from "react";
 import { useQuery } from "@tanstack/react-query";
 import { postSchema } from "shared";
 import * as v from "valibot";
-import Post from "./components/post/Post";
+import Post from "./post/Post";
 
 const Timeline: React.FC = () => {
   const { data: posts } = useQuery({
