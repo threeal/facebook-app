@@ -23,7 +23,7 @@
   border-radius: 8px;
   background-color: white;
   padding: 8px;
-  min-height: 30px;
+  height: auto;
   color: black;
   font-size: 12px;
 }

@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import Timeline from "../timeline/Timeline";
+import PostsPage from "./pages/PostsPage";
 import UsersPage from "./pages/UsersPage";
 import "./AdminDashboard.css";
 
@@ -101,14 +102,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       return <UsersPage adminSecret={adminSecret} onBack={openMainPage} />;
 
     case "posts":
-      return (
-        <>
-          <h1 className="admin-title">Posts</h1>
-          <button className="admin-button" onClick={openMainPage}>
-            Back
-          </button>
-        </>
-      );
+      return <PostsPage adminSecret={adminSecret} onBack={openMainPage} />;
   }
 };
 
