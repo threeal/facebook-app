@@ -1,12 +1,23 @@
-import { FastifyInstance } from "fastify";
+import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
+import { RawUserSchema } from "shared";
+import { db } from "../db.js";
 
 export default function adminApiRoute(fastify: FastifyInstance) {
-  fastify.post("/api/admin/verify", (request): null => {
+  const assertAdminSecret = (request: FastifyRequest) => {
     const adminSecret = request.headers["admin-secret"];
     if (adminSecret !== process.env.ADMIN_SECRET) {
       throw httpErrors.Unauthorized();
     }
+  };
+
+  fastify.post("/api/admin/verify", (request): null => {
+    assertAdminSecret(request);
     return null;
+  });
+
+  fastify.get("/api/admin/users", async (request): Promise<RawUserSchema[]> => {
+    assertAdminSecret(request);
+    return db.selectFrom("authors").select(["id", "name", "avatar"]).execute();
   });
 }
