@@ -5,11 +5,11 @@ import LikeIcon from "./assets/like-icon.png";
 import LikeSolidIcon from "./assets/like-solid-icon.png";
 import SendIcon from "./assets/send-icon.png";
 import ShareIcon from "./assets/share-icon.png";
-import CloseIcon from "./components/CloseIcon";
-import DetailsIcon from "./components/DetailsIcon";
-import PostVideoContent from "./components/PostVideoContent";
-import ReactionIcon from "./components/ReactionIcon";
-import PrivacyIcon from "./components/PrivacyIcon";
+import CloseIcon from "./icons/CloseIcon";
+import DetailsIcon from "./icons/DetailsIcon";
+import ReactionIcon from "./icons/ReactionIcon";
+import PrivacyIcon from "./icons/PrivacyIcon";
+import PostVideoContent from "./PostVideoContent";
 import "./Post.css";
 
 export interface PostProps {
