@@ -2,11 +2,16 @@ import fastifyHttpProxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
 import Fastify from "fastify";
 import path from "node:path";
+import adminApiRoute from "./api/admin.js";
 import postsApiRoute from "./api/posts.js";
 
 const fastify = Fastify({ logger: true });
 
 fastify.register(postsApiRoute);
+
+if (process.env.ADMIN_SECRET) {
+  fastify.register(adminApiRoute);
+}
 
 fastify.register(fastifyStatic, {
   root: path.resolve("data/static"),
