@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import Timeline from "../timeline/Timeline";
 import "./AdminDashboard.css";
 
+type Page = "main" | "users" | "posts";
+
 export interface AdminDashboardProps {
   adminSecret: string;
   onAdminSecretInvalid: () => void;
@@ -33,12 +35,25 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
   });
 
   const [showDashboard, setShowDashboard] = useState<boolean>(true);
+  const [page, setPage] = useState<Page>("main");
 
   if (!isSecretVerified) return null;
 
-  const openDashboard = () => {
-    setShowDashboard(true);
-  };
+  if (!showDashboard) {
+    const openDashboard = () => {
+      setShowDashboard(true);
+    };
+
+    return (
+      <>
+        <h1 className="admin-title">Timeline</h1>
+        <button className="admin-button" onClick={openDashboard}>
+          Admin Dashboard
+        </button>
+        <Timeline />
+      </>
+    );
+  }
 
   const closeDashboard = () => {
     setShowDashboard(false);
@@ -49,25 +64,58 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
     window.history.replaceState({}, "", window.location.pathname);
   };
 
-  return showDashboard ? (
-    <>
-      <h1 className="admin-title">Admin Dashboard</h1>
-      <button className="admin-button" onClick={closeDashboard}>
-        Timeline
-      </button>
-      <button className="admin-button" onClick={exitDashboard}>
-        Exit
-      </button>
-    </>
-  ) : (
-    <>
-      <h1 className="admin-title">Timeline</h1>
-      <button className="admin-button" onClick={openDashboard}>
-        Admin Dashboard
-      </button>
-      <Timeline />
-    </>
-  );
+  const openMainPage = () => {
+    setPage("main");
+  };
+
+  const openUsersPage = () => {
+    setPage("users");
+  };
+
+  const openPostsPage = () => {
+    setPage("posts");
+  };
+
+  switch (page) {
+    case "main":
+      return (
+        <>
+          <h1 className="admin-title">Admin Dashboard</h1>
+          <button className="admin-button" onClick={closeDashboard}>
+            Timeline
+          </button>
+          <button className="admin-button" onClick={openUsersPage}>
+            Users
+          </button>
+          <button className="admin-button" onClick={openPostsPage}>
+            Posts
+          </button>
+          <button className="admin-button" onClick={exitDashboard}>
+            Exit
+          </button>
+        </>
+      );
+
+    case "users":
+      return (
+        <>
+          <h1 className="admin-title">Users</h1>
+          <button className="admin-button" onClick={openMainPage}>
+            Back
+          </button>
+        </>
+      );
+
+    case "posts":
+      return (
+        <>
+          <h1 className="admin-title">Posts</h1>
+          <button className="admin-button" onClick={openMainPage}>
+            Back
+          </button>
+        </>
+      );
+  }
 };
 
 export default AdminDashboard;
