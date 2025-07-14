@@ -2,11 +2,11 @@ import fastifyHttpProxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
 import Fastify from "fastify";
 import path from "node:path";
-import apiRoute from "./api.js";
+import postsApiRoute from "./api/posts.js";
 
 const fastify = Fastify({ logger: true });
 
-fastify.register(apiRoute);
+fastify.register(postsApiRoute);
 
 fastify.register(fastifyStatic, {
   root: path.resolve("data/static"),
