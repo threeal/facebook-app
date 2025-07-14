@@ -1,8 +1,8 @@
 import { FastifyInstance } from "fastify";
 import type { PostSchema } from "shared";
-import { db } from "./db.js";
+import { db } from "../db.js";
 
-export default function (fastify: FastifyInstance) {
+export default function postsApiRoute(fastify: FastifyInstance) {
   fastify.get("/api/posts", async (): Promise<PostSchema[]> => {
     const rows = await db
       .selectFrom("posts")
