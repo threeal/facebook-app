@@ -1,6 +1,17 @@
-h1 {
-  color: #101010;
-  font-weight: 600;
-  font-size: 24px;
+.admin-title {
+  min-height: 30px;
+  color: black;
+  font-size: 20px;
   text-align: center;
+}
+
+.admin-button {
+  cursor: pointer;
+  margin: 0 4px;
+  border: none;
+  border-radius: 8px;
+  background-color: white;
+  min-height: 30px;
+  color: black;
+  font-size: 16px;
 }
