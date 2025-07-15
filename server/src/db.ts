@@ -1,5 +1,5 @@
 import SQLite from "better-sqlite3";
-import { Generated, Kysely, SqliteDialect, Nullable } from "kysely";
+import { Generated, Kysely, SqliteDialect } from "kysely";
 
 interface Database {
   users: {
@@ -10,8 +10,8 @@ interface Database {
     id: Generated<number>;
     author_id: number;
     timestamp: number;
-    caption: Nullable<string>;
-    media_type: Nullable<"image" | "video">;
+    caption: string | null;
+    media_type: "image" | "video" | null;
     reactions: Generated<number>;
   };
 }

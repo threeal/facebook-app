@@ -16,6 +16,36 @@
   font-size: 16px;
 }
 
+.admin-button:disabled {
+  cursor: not-allowed;
+  color: gray;
+}
+
+.admin-input {
+  box-sizing: border-box;
+  margin: 0 4px;
+  border: none;
+  border-radius: 8px;
+  background-color: white;
+  padding: 8px;
+  min-height: 30px;
+  color: black;
+  font-size: 14px;
+}
+
+.admin-input:focus {
+  outline: none;
+}
+
+.admin-input::placeholder {
+  color: gray;
+}
+
+textarea.admin-input {
+  min-height: 80px;
+  resize: vertical;
+}
+
 .admin-card {
   cursor: pointer;
   margin: 0 4px;
