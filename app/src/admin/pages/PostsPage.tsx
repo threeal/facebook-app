@@ -1,19 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { parseRawPostSchema } from "shared";
+import { useAdminStore } from "../adminStore";
 
 export interface PostsPageProps {
-  adminSecret: string;
   onBack: () => void;
 }
 
-const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
+const PostsPage: React.FC<PostsPageProps> = ({ onBack }) => {
+  const { adminSecret } = useAdminStore();
   const { data: posts } = useQuery({
     queryKey: ["admin/posts", adminSecret],
     queryFn: async () => {
       try {
         const res = await fetch("/api/admin/posts", {
-          headers: { "admin-secret": adminSecret },
+          headers: { "admin-secret": adminSecret ?? "" },
         });
         if (!res.ok) throw new Error(res.statusText);
         return parseRawPostSchema(await res.json());

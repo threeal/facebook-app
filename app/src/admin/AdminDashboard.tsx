@@ -1,70 +1,14 @@
-import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import Timeline from "../timeline/Timeline";
 import PostsPage from "./pages/PostsPage";
 import UsersPage from "./pages/UsersPage";
 import "./AdminDashboard.css";
+import { useAdminStore } from "./adminStore";
 
 type Page = "main" | "users" | "posts";
 
-export interface AdminDashboardProps {
-  adminSecret: string;
-  onAdminSecretInvalid: () => void;
-}
-
-const AdminDashboard: React.FC<AdminDashboardProps> = ({
-  adminSecret,
-  onAdminSecretInvalid,
-}) => {
-  const { data: isSecretVerified } = useQuery({
-    queryKey: ["admin/verify", adminSecret],
-    queryFn: async () => {
-      try {
-        const res = await fetch("/api/admin/verify", {
-          method: "POST",
-          headers: { "admin-secret": adminSecret },
-          body: null,
-        });
-        if (!res.ok) throw new Error(res.statusText);
-        return true;
-      } catch (err) {
-        console.error("Failed to verify admin:", err);
-        onAdminSecretInvalid();
-        return false;
-      }
-    },
-    initialData: false,
-  });
-
-  const [showDashboard, setShowDashboard] = useState<boolean>(true);
+const AdminDashboard: React.FC = () => {
+  const { clearAdminSecret, hideAdminDashboard } = useAdminStore();
   const [page, setPage] = useState<Page>("main");
-
-  if (!isSecretVerified) return null;
-
-  if (!showDashboard) {
-    const openDashboard = () => {
-      setShowDashboard(true);
-    };
-
-    return (
-      <>
-        <h1 className="admin-title">Timeline</h1>
-        <button className="admin-button" onClick={openDashboard}>
-          Admin Dashboard
-        </button>
-        <Timeline />
-      </>
-    );
-  }
-
-  const closeDashboard = () => {
-    setShowDashboard(false);
-  };
-
-  const exitDashboard = () => {
-    onAdminSecretInvalid();
-    window.history.replaceState({}, "", window.location.pathname);
-  };
 
   const openMainPage = () => {
     setPage("main");
@@ -83,7 +27,7 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
       return (
         <>
           <h1 className="admin-title">Admin Dashboard</h1>
-          <button className="admin-button" onClick={closeDashboard}>
+          <button className="admin-button" onClick={hideAdminDashboard}>
             Timeline
           </button>
           <button className="admin-button" onClick={openUsersPage}>
@@ -92,17 +36,17 @@ const AdminDashboard: React.FC<AdminDashboardProps> = ({
           <button className="admin-button" onClick={openPostsPage}>
             Posts
           </button>
-          <button className="admin-button" onClick={exitDashboard}>
+          <button className="admin-button" onClick={clearAdminSecret}>
             Exit
           </button>
         </>
       );
 
     case "users":
-      return <UsersPage adminSecret={adminSecret} onBack={openMainPage} />;
+      return <UsersPage onBack={openMainPage} />;
 
     case "posts":
-      return <PostsPage adminSecret={adminSecret} onBack={openMainPage} />;
+      return <PostsPage onBack={openMainPage} />;
   }
 };
 

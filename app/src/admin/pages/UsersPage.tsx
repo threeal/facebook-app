@@ -1,19 +1,20 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { parseRawUsersSchema } from "shared";
+import { useAdminStore } from "../adminStore";
 
 export interface UsersPageProps {
-  adminSecret: string;
   onBack: () => void;
 }
 
-const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
+const UsersPage: React.FC<UsersPageProps> = ({ onBack }) => {
+  const { adminSecret } = useAdminStore();
   const { data: users } = useQuery({
     queryKey: ["admin/users", adminSecret],
     queryFn: async () => {
       try {
         const res = await fetch("/api/admin/users", {
-          headers: { "admin-secret": adminSecret },
+          headers: { "admin-secret": adminSecret ?? "" },
         });
         if (!res.ok) throw new Error(res.statusText);
         return parseRawUsersSchema(await res.json());
