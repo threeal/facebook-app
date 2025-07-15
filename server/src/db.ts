@@ -2,7 +2,7 @@ import SQLite from "better-sqlite3";
 import { Generated, Kysely, SqliteDialect, Nullable } from "kysely";
 
 interface Database {
-  authors: {
+  users: {
     id: Generated<number>;
     name: string;
     avatar: string;

@@ -6,10 +6,10 @@ export default function postsApiRoute(fastify: FastifyInstance) {
   fastify.get("/api/posts", async (): Promise<PostSchema[]> => {
     const rows = await db
       .selectFrom("posts")
-      .innerJoin("authors", "posts.author_id", "authors.id")
+      .innerJoin("users", "posts.author_id", "users.id")
       .select([
-        "authors.name as author_name",
-        "authors.avatar as author_avatar",
+        "users.name as authorName",
+        "users.avatar as authorAvatar",
         "posts.caption",
         "posts.media",
         "posts.reactions",
@@ -19,8 +19,8 @@ export default function postsApiRoute(fastify: FastifyInstance) {
 
     return rows.map((row) => ({
       author: {
-        name: row.author_name,
-        avatar: row.author_avatar,
+        name: row.authorName,
+        avatar: row.authorAvatar,
       },
       caption: row.caption,
       media: row.media,
