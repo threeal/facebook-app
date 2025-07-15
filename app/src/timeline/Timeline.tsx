@@ -1,7 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { postSchema } from "shared";
-import * as v from "valibot";
+import { parsePostsSchema } from "shared";
 import Post from "./post/Post";
 
 const Timeline: React.FC = () => {
@@ -10,7 +9,7 @@ const Timeline: React.FC = () => {
     queryFn: async () => {
       const res = await fetch("/api/posts");
       if (!res.ok) throw new Error(res.statusText);
-      return v.parse(v.array(postSchema), await res.json());
+      return parsePostsSchema(await res.json());
     },
     initialData: [],
   });

@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { rawUsersSchema } from "shared";
-import * as v from "valibot";
+import { parseRawUsersSchema } from "shared";
 
 export interface UsersPageProps {
   adminSecret: string;
@@ -17,7 +16,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
           headers: { "admin-secret": adminSecret },
         });
         if (!res.ok) throw new Error(res.statusText);
-        return v.parse(rawUsersSchema, await res.json());
+        return parseRawUsersSchema(await res.json());
       } catch (err) {
         console.error("Failed to fetch users:", err);
         throw err;
