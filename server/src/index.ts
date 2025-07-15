@@ -1,5 +1,6 @@
 import fastifyHttpProxy from "@fastify/http-proxy";
 import fastifyStatic from "@fastify/static";
+import "dotenv/config";
 import Fastify from "fastify";
 import path from "node:path";
 import adminApiRoute from "./api/admin.js";
