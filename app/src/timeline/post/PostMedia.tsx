@@ -3,13 +3,13 @@ import { InView } from "react-intersection-observer";
 import PageVisibility from "react-page-visibility";
 import MuteIcon from "./icons/MuteIcon";
 import UnmuteIcon from "./icons/UnmuteIcon";
-import "./PostVideoContent.css";
+import "./PostMedia.css";
 
-export interface PostVideoContentProps {
+interface PostMediaVideoProps {
   postId: number;
 }
 
-const PostVideoContent: React.FC<PostVideoContentProps> = ({ postId }) => {
+const PostMediaVideo: React.FC<PostMediaVideoProps> = ({ postId }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const inViewRef = useRef<boolean>(false);
 
@@ -43,7 +43,7 @@ const PostVideoContent: React.FC<PostVideoContentProps> = ({ postId }) => {
   };
 
   return (
-    <InView onChange={onInViewChange} className="post-video">
+    <InView onChange={onInViewChange} className="post-media-video">
       <PageVisibility onChange={onVisibilityChange} />
       <video
         ref={videoRef}
@@ -53,15 +53,34 @@ const PostVideoContent: React.FC<PostVideoContentProps> = ({ postId }) => {
         controls={false}
         playsInline
       />
-      <button className="post-video-mute-button" onClick={onMuteToggle}>
+      <button className="post-media-video-mute-button" onClick={onMuteToggle}>
         {isMuted ? (
-          <MuteIcon className="post-video-mute-icon" />
+          <MuteIcon className="post-media-video-mute-icon" />
         ) : (
-          <UnmuteIcon className="post-video-mute-icon" />
+          <UnmuteIcon className="post-media-video-mute-icon" />
         )}
       </button>
     </InView>
   );
 };
 
-export default PostVideoContent;
+export interface PostMediaProps {
+  postId: number;
+  mediaType: "image" | "video";
+}
+
+const PostMedia: React.FC<PostMediaProps> = ({ postId, mediaType }) => {
+  switch (mediaType) {
+    case "image":
+      return (
+        <div className="post-media-image">
+          <img src={`/static/posts/medias/${postId.toString()}/390.webp`} />
+        </div>
+      );
+
+    case "video":
+      return <PostMediaVideo postId={postId} />;
+  }
+};
+
+export default PostMedia;

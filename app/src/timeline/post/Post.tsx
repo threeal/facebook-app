@@ -9,7 +9,7 @@ import CloseIcon from "./icons/CloseIcon";
 import DetailsIcon from "./icons/DetailsIcon";
 import ReactionIcon from "./icons/ReactionIcon";
 import PrivacyIcon from "./icons/PrivacyIcon";
-import PostVideoContent from "./PostVideoContent";
+import PostMedia from "./PostMedia";
 import "./Post.css";
 
 export interface PostProps {
@@ -62,12 +62,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
           {post.caption}
         </div>
       )}
-      {post.mediaType == "image" && (
-        <div className="post-image">
-          <img src={`/static/posts/medias/${post.id.toString()}/390.webp`} />
-        </div>
+      {post.mediaType && (
+        <PostMedia postId={post.id} mediaType={post.mediaType} />
       )}
-      {post.mediaType == "video" && <PostVideoContent postId={post.id} />}
       <div className="post-footer">
         {reactions > 0 && (
           <div className="post-interactions">

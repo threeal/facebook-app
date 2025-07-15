@@ -1,17 +1,29 @@
-.post-video {
-  position: relative;
+.post-media-image {
   cursor: pointer;
   width: 100%;
 }
 
-.post-video video {
+.post-media-image img {
   display: block;
   width: 100%;
   max-height: 500px;
   object-fit: cover;
 }
 
-.post-video-mute-button {
+.post-media-video {
+  position: relative;
+  cursor: pointer;
+  width: 100%;
+}
+
+.post-media-video video {
+  display: block;
+  width: 100%;
+  max-height: 500px;
+  object-fit: cover;
+}
+
+.post-media-video-mute-button {
   display: flex;
   position: absolute;
   right: 7px;
@@ -25,7 +37,7 @@
   height: 30px;
 }
 
-.post-video-mute-icon {
+.post-media-video-mute-icon {
   position: absolute;
   width: 30px;
   height: 30px;
