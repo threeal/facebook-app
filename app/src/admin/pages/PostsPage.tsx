@@ -31,17 +31,19 @@ const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
       <button className="admin-button" onClick={onBack}>
         Back
       </button>
-      {posts.map(({ id, authorName, caption, mediaType, reactions }) => (
-        <div key={id} className="admin-card">
-          ID: {id}
+      {posts.map((post) => (
+        <div key={post.id} className="admin-card">
+          ID: {post.id}
           <br />
-          Author: {authorName}
+          Author: {post.authorName}
           <br />
-          Caption: {caption ?? "_"}
+          Date: {new Date(post.timestamp * 1000).toLocaleDateString()}
           <br />
-          Media Type: {mediaType ?? "_"}
+          Caption: {post.caption ?? "_"}
           <br />
-          Reactions: {reactions}
+          Media Type: {post.mediaType ?? "_"}
+          <br />
+          Reactions: {post.reactions}
         </div>
       ))}
     </>
