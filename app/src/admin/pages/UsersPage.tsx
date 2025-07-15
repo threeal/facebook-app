@@ -1,0 +1,48 @@
+import { useQuery } from "@tanstack/react-query";
+import React from "react";
+import { rawUsersSchema } from "shared";
+import * as v from "valibot";
+
+export interface UsersPageProps {
+  adminSecret: string;
+  onBack: () => void;
+}
+
+const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
+  const { data: users } = useQuery({
+    queryKey: ["admin/users", adminSecret],
+    queryFn: async () => {
+      try {
+        const res = await fetch("/api/admin/users", {
+          headers: { "admin-secret": adminSecret },
+        });
+        if (!res.ok) throw new Error(res.statusText);
+        return v.parse(rawUsersSchema, await res.json());
+      } catch (err) {
+        console.error("Failed to fetch users:", err);
+        throw err;
+      }
+    },
+    initialData: [],
+  });
+
+  return (
+    <>
+      <h1 className="admin-title">Users</h1>
+      <button className="admin-button" onClick={onBack}>
+        Back
+      </button>
+      {users.map(({ id, name, avatar }) => (
+        <div key={id} className="admin-card">
+          ID: {id}
+          <br />
+          Name: {name}
+          <br />
+          Avatar: {avatar}
+        </div>
+      ))}
+    </>
+  );
+};
+
+export default UsersPage;
