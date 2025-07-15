@@ -1,7 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
-import { rawPostsSchema } from "shared";
-import * as v from "valibot";
+import { parseRawPostSchema } from "shared";
 
 export interface PostsPageProps {
   adminSecret: string;
@@ -17,7 +16,7 @@ const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
           headers: { "admin-secret": adminSecret },
         });
         if (!res.ok) throw new Error(res.statusText);
-        return v.parse(rawPostsSchema, await res.json());
+        return parseRawPostSchema(await res.json());
       } catch (err) {
         console.error("Failed to fetch posts:", err);
         throw err;

@@ -1,6 +1,6 @@
 import * as v from "valibot";
 
-export const postSchema = v.object({
+const postSchema = v.object({
   author: v.object({
     name: v.string(),
     avatar: v.string(),
@@ -12,4 +12,10 @@ export const postSchema = v.object({
   date: v.string(),
 });
 
+const postsSchema = v.array(postSchema);
+
 export type PostSchema = v.InferInput<typeof postSchema>;
+
+export function parsePostsSchema(data: unknown) {
+  return v.parse(postsSchema, data);
+}

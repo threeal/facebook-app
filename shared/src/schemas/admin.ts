@@ -1,16 +1,20 @@
 import * as v from "valibot";
 
-export const rawUserSchema = v.object({
+const rawUserSchema = v.object({
   id: v.number(),
   name: v.string(),
   avatar: v.string(),
 });
 
-export const rawUsersSchema = v.array(rawUserSchema);
+const rawUsersSchema = v.array(rawUserSchema);
 
 export type RawUserSchema = v.InferInput<typeof rawUserSchema>;
 
-export const rawPostSchema = v.object({
+export function parseRawUsersSchema(data: unknown) {
+  return v.parse(rawUsersSchema, data);
+}
+
+const rawPostSchema = v.object({
   id: v.number(),
   authorName: v.string(),
   caption: v.nullable(v.string()),
@@ -20,6 +24,10 @@ export const rawPostSchema = v.object({
   date: v.string(),
 });
 
-export const rawPostsSchema = v.array(rawPostSchema);
+const rawPostsSchema = v.array(rawPostSchema);
 
 export type RawPostSchema = v.InferInput<typeof rawPostSchema>;
+
+export function parseRawPostSchema(data: unknown) {
+  return v.parse(rawPostsSchema, data);
+}
