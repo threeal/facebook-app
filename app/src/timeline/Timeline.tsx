@@ -17,7 +17,8 @@ const Timeline: React.FC<TimeLineProps> = ({
     queryFn: async () => {
       const res = await fetch("/api/posts");
       if (!res.ok) throw new Error(res.statusText);
-      return parsePostsSchema(await res.json());
+      const posts = parsePostsSchema(await res.json());
+      return posts.sort((a, b) => a.timestamp - b.timestamp);
     },
     initialData: [],
   });

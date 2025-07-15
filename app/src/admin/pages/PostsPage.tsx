@@ -16,7 +16,8 @@ const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
           headers: { "admin-secret": adminSecret },
         });
         if (!res.ok) throw new Error(res.statusText);
-        return parseRawPostSchema(await res.json());
+        const posts = parseRawPostSchema(await res.json());
+        return posts.sort((a, b) => a.timestamp - b.timestamp);
       } catch (err) {
         console.error("Failed to fetch posts:", err);
         throw err;
