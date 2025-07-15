@@ -6,10 +6,10 @@ import UnmuteIcon from "./icons/UnmuteIcon";
 import "./PostVideoContent.css";
 
 export interface PostVideoContentProps {
-  video: string;
+  postId: number;
 }
 
-const PostVideoContent: React.FC<PostVideoContentProps> = ({ video }) => {
+const PostVideoContent: React.FC<PostVideoContentProps> = ({ postId }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const inViewRef = useRef<boolean>(false);
 
@@ -47,7 +47,7 @@ const PostVideoContent: React.FC<PostVideoContentProps> = ({ video }) => {
       <PageVisibility onChange={onVisibilityChange} />
       <video
         ref={videoRef}
-        src={video}
+        src={`/static/posts/medias/${postId.toString()}/390.webm`}
         loop
         muted={isMuted}
         controls={false}

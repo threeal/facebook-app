@@ -10,7 +10,7 @@ interface Database {
     id: Generated<number>;
     author_id: number;
     caption: Nullable<string>;
-    media: Nullable<string>;
+    media_type: Nullable<"image" | "video">;
     reactions: Generated<number>;
     date: string;
   };

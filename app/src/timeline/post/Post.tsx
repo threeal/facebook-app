@@ -25,8 +25,6 @@ const Post: React.FC<PostProps> = ({ post }) => {
     setIsLiked(!isLiked);
   };
 
-  const hasImageMedia = post.media && !/.(mp4|webm)$/.test(post.media);
-
   return (
     <div className="post">
       <div className="post-header">
@@ -58,20 +56,18 @@ const Post: React.FC<PostProps> = ({ post }) => {
         <div
           className="post-caption"
           style={{
-            marginBottom: !hasImageMedia && reactions > 0 ? "2px" : "12px",
+            marginBottom: !post.mediaType && reactions > 0 ? "2px" : "12px",
           }}
         >
           {post.caption}
         </div>
       )}
-      {post.media &&
-        (hasImageMedia ? (
-          <div className="post-image">
-            <img src={post.media} />
-          </div>
-        ) : (
-          <PostVideoContent video={post.media} />
-        ))}
+      {post.mediaType == "image" && (
+        <div className="post-image">
+          <img src={`/static/posts/medias/${post.id.toString()}/390.webp`} />
+        </div>
+      )}
+      {post.mediaType == "video" && <PostVideoContent postId={post.id} />}
       <div className="post-footer">
         {reactions > 0 && (
           <div className="post-interactions">

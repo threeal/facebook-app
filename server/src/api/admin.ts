@@ -30,7 +30,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
         "posts.id",
         "users.name as authorName",
         "posts.caption",
-        "posts.media",
+        "posts.media_type as mediaType",
         "posts.reactions",
         "posts.date",
       ])
