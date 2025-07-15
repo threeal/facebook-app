@@ -29,3 +29,16 @@ export type RawPostSchema = v.InferInput<typeof rawPostSchema>;
 export function parseRawPostSchema(data: unknown) {
   return v.parse(rawPostsSchema, data);
 }
+
+const adminCreatePostSchema = v.object({
+  authorId: v.number(),
+  timestamp: v.number(),
+  caption: v.string(),
+  reactions: v.number(),
+});
+
+export type AdminCreatePostSchema = v.InferInput<typeof adminCreatePostSchema>;
+
+export function parseAdminCreatePostSchema(data: unknown) {
+  return v.parse(adminCreatePostSchema, data);
+}

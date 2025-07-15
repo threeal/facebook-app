@@ -1,6 +1,12 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
-import { RawPostSchema, RawUserSchema } from "shared";
+
+import {
+  parseAdminCreatePostSchema,
+  RawPostSchema,
+  RawUserSchema,
+} from "shared";
+
 import { db } from "../db.js";
 
 export default function adminApiRoute(fastify: FastifyInstance) {
@@ -34,6 +40,21 @@ export default function adminApiRoute(fastify: FastifyInstance) {
         "posts.media_type as mediaType",
         "posts.reactions",
       ])
+      .execute();
+  });
+
+  fastify.post("/api/admin/posts", async (request): Promise<void> => {
+    assertAdminSecret(request);
+    const post = parseAdminCreatePostSchema(request.body);
+    await db
+      .insertInto("posts")
+      .values({
+        author_id: post.authorId,
+        timestamp: post.timestamp,
+        caption: post.caption,
+        media_type: null,
+        reactions: post.reactions,
+      })
       .execute();
   });
 }
