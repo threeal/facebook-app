@@ -16,6 +16,33 @@ export interface PostProps {
   post: PostSchema;
 }
 
+const monthNames = [
+  "Januari",
+  "Februari",
+  "Maret",
+  "April",
+  "Mei",
+  "Juni",
+  "Juli",
+  "Agustus",
+  "September",
+  "Oktober",
+  "November",
+  "Desember",
+];
+
+function formatDate(timestamp: number): string {
+  const date = new Date(timestamp * 1000);
+  const now = new Date();
+
+  const dd = date.getUTCDate().toString();
+  const mm = monthNames[date.getUTCMonth()];
+
+  return date.getUTCFullYear() != now.getUTCFullYear()
+    ? `${dd} ${mm} ${date.getUTCFullYear().toString()}`
+    : `${dd} ${mm}`;
+}
+
 const Post: React.FC<PostProps> = ({ post }) => {
   const [isLiked, setIsLiked] = useState(false);
 
@@ -37,7 +64,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
           <div className="post-author-details">
             <h3>{post.author.name}</h3>
             <div className="post-meta">
-              <span>{post.date}</span>
+              <span>{formatDate(post.timestamp)}</span>
               <span>•</span>
               <PrivacyIcon className="post-privacy-icon" />
             </div>

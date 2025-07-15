@@ -10,11 +10,11 @@ export default function postsApiRoute(fastify: FastifyInstance) {
       .select([
         "posts.id",
         "users.id as authorId",
+        "posts.timestamp",
         "users.name as authorName",
         "posts.caption",
         "posts.media_type as mediaType",
         "posts.reactions",
-        "posts.date",
       ])
       .execute();
 
@@ -24,10 +24,10 @@ export default function postsApiRoute(fastify: FastifyInstance) {
         id: row.authorId,
         name: row.authorName,
       },
+      timestamp: row.timestamp,
       caption: row.caption,
       mediaType: row.mediaType,
       reactions: row.reactions,
-      date: row.date,
     }));
   });
 }

@@ -29,10 +29,10 @@ export default function adminApiRoute(fastify: FastifyInstance) {
       .select([
         "posts.id",
         "users.name as authorName",
+        "posts.timestamp",
         "posts.caption",
         "posts.media_type as mediaType",
         "posts.reactions",
-        "posts.date",
       ])
       .execute();
   });

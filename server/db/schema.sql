@@ -6,9 +6,9 @@ CREATE TABLE users (
 CREATE TABLE posts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   author_id INTEGER NOT NULL,
+  timestamp INTEGER NOT NULL,
   caption TEXT,
   media_type TEXT,
   reactions INTEGER DEFAULT 0,
-  date TEXT NOT NULL,
   FOREIGN KEY (author_id) REFERENCES users(id)
 );
