@@ -11,8 +11,7 @@ export default function postsApiRoute(fastify: FastifyInstance) {
         "authors.name as author_name",
         "authors.avatar as author_avatar",
         "posts.caption",
-        "posts.image",
-        "posts.video",
+        "posts.media",
         "posts.reactions",
         "posts.date",
       ])
@@ -24,8 +23,7 @@ export default function postsApiRoute(fastify: FastifyInstance) {
         avatar: row.author_avatar,
       },
       caption: row.caption,
-      image: row.image,
-      video: row.video,
+      media: row.media,
       reactions: row.reactions,
       date: row.date,
     }));

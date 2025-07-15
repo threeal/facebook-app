@@ -11,8 +11,7 @@ interface Database {
     id: Generated<number>;
     author_id: number;
     caption: Nullable<string>;
-    image: Nullable<string>;
-    video: Nullable<string>;
+    media: Nullable<string>;
     reactions: Generated<number>;
     date: string;
   };

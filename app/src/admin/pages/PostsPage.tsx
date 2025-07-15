@@ -31,7 +31,7 @@ const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
       <button className="admin-button" onClick={onBack}>
         Back
       </button>
-      {posts.map(({ id, authorName, caption, image, video, reactions }) => (
+      {posts.map(({ id, authorName, caption, media, reactions }) => (
         <div key={id} className="admin-card">
           ID: {id}
           <br />
@@ -39,9 +39,7 @@ const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
           <br />
           Caption: {caption ?? "_"}
           <br />
-          Image: {image ?? "_"}
-          <br />
-          Video: {video ?? "_"}
+          Media: {media ?? "_"}
           <br />
           Reactions: {reactions}
         </div>
