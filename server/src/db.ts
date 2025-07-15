@@ -5,7 +5,6 @@ interface Database {
   users: {
     id: Generated<number>;
     name: string;
-    avatar: string;
   };
   posts: {
     id: Generated<number>;

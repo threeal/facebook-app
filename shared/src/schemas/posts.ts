@@ -2,8 +2,8 @@ import * as v from "valibot";
 
 const postSchema = v.object({
   author: v.object({
+    id: v.number(),
     name: v.string(),
-    avatar: v.string(),
   }),
   caption: v.nullable(v.string()),
   media: v.nullable(v.string()),

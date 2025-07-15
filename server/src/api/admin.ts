@@ -18,7 +18,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
 
   fastify.get("/api/admin/users", async (request): Promise<RawUserSchema[]> => {
     assertAdminSecret(request);
-    return db.selectFrom("users").select(["id", "name", "avatar"]).execute();
+    return db.selectFrom("users").select(["id", "name"]).execute();
   });
 
   fastify.get("/api/admin/posts", async (request): Promise<RawPostSchema[]> => {

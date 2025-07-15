@@ -32,7 +32,9 @@ const Post: React.FC<PostProps> = ({ post }) => {
       <div className="post-header">
         <div className="post-author-info">
           <div className="post-author-avatar">
-            <img src={post.author.avatar} />
+            <img
+              src={`/static/users/avatars/${post.author.id.toString()}/40x40.webp`}
+            />
           </div>
           <div className="post-author-details">
             <h3>{post.author.name}</h3>

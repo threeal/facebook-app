@@ -3,7 +3,6 @@ import * as v from "valibot";
 const rawUserSchema = v.object({
   id: v.number(),
   name: v.string(),
-  avatar: v.string(),
 });
 
 const rawUsersSchema = v.array(rawUserSchema);

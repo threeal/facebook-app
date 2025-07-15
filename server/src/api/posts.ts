@@ -8,8 +8,8 @@ export default function postsApiRoute(fastify: FastifyInstance) {
       .selectFrom("posts")
       .innerJoin("users", "posts.author_id", "users.id")
       .select([
+        "users.id as authorId",
         "users.name as authorName",
-        "users.avatar as authorAvatar",
         "posts.caption",
         "posts.media",
         "posts.reactions",
@@ -19,8 +19,8 @@ export default function postsApiRoute(fastify: FastifyInstance) {
 
     return rows.map((row) => ({
       author: {
+        id: row.authorId,
         name: row.authorName,
-        avatar: row.authorAvatar,
       },
       caption: row.caption,
       media: row.media,
