@@ -9,10 +9,10 @@ interface Database {
   posts: {
     id: Generated<number>;
     author_id: number;
+    timestamp: number;
     caption: Nullable<string>;
     media_type: Nullable<"image" | "video">;
     reactions: Generated<number>;
-    date: string;
   };
 }
 

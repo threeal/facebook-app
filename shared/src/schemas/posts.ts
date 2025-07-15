@@ -6,10 +6,10 @@ const postSchema = v.object({
     id: v.number(),
     name: v.string(),
   }),
+  timestamp: v.number(),
   caption: v.nullable(v.string()),
   mediaType: v.nullable(v.union([v.literal("video"), v.literal("image")])),
   reactions: v.number(),
-  date: v.string(),
 });
 
 const postsSchema = v.array(postSchema);
