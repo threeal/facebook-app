@@ -9,7 +9,7 @@ import CloseIcon from "./icons/CloseIcon";
 import DetailsIcon from "./icons/DetailsIcon";
 import ReactionIcon from "./icons/ReactionIcon";
 import PrivacyIcon from "./icons/PrivacyIcon";
-import PostVideoContent from "./PostVideoContent";
+import PostMedia from "./PostMedia";
 import "./Post.css";
 
 export interface PostProps {
@@ -25,14 +25,14 @@ const Post: React.FC<PostProps> = ({ post }) => {
     setIsLiked(!isLiked);
   };
 
-  const hasImageMedia = post.media && !/.(mp4|webm)$/.test(post.media);
-
   return (
     <div className="post">
       <div className="post-header">
         <div className="post-author-info">
           <div className="post-author-avatar">
-            <img src={post.author.avatar} />
+            <img
+              src={`/static/users/avatars/${post.author.id.toString()}/40x40.webp`}
+            />
           </div>
           <div className="post-author-details">
             <h3>{post.author.name}</h3>
@@ -56,20 +56,15 @@ const Post: React.FC<PostProps> = ({ post }) => {
         <div
           className="post-caption"
           style={{
-            marginBottom: !hasImageMedia && reactions > 0 ? "2px" : "12px",
+            marginBottom: !post.mediaType && reactions > 0 ? "2px" : "12px",
           }}
         >
           {post.caption}
         </div>
       )}
-      {post.media &&
-        (hasImageMedia ? (
-          <div className="post-image">
-            <img src={post.media} />
-          </div>
-        ) : (
-          <PostVideoContent video={post.media} />
-        ))}
+      {post.mediaType && (
+        <PostMedia postId={post.id} mediaType={post.mediaType} />
+      )}
       <div className="post-footer">
         {reactions > 0 && (
           <div className="post-interactions">

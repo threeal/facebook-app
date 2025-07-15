@@ -18,19 +18,19 @@ export default function adminApiRoute(fastify: FastifyInstance) {
 
   fastify.get("/api/admin/users", async (request): Promise<RawUserSchema[]> => {
     assertAdminSecret(request);
-    return db.selectFrom("authors").select(["id", "name", "avatar"]).execute();
+    return db.selectFrom("users").select(["id", "name"]).execute();
   });
 
   fastify.get("/api/admin/posts", async (request): Promise<RawPostSchema[]> => {
     assertAdminSecret(request);
     return db
       .selectFrom("posts")
-      .innerJoin("authors", "posts.author_id", "authors.id")
+      .innerJoin("users", "posts.author_id", "users.id")
       .select([
         "posts.id",
-        "authors.name as authorName",
+        "users.name as authorName",
         "posts.caption",
-        "posts.media",
+        "posts.media_type as mediaType",
         "posts.reactions",
         "posts.date",
       ])

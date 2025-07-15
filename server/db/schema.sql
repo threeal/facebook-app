@@ -1,15 +1,14 @@
-CREATE TABLE authors (
+CREATE TABLE users (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
-  name TEXT NOT NULL,
-  avatar TEXT NOT NULL
+  name TEXT NOT NULL
 );
 
 CREATE TABLE posts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   author_id INTEGER NOT NULL,
   caption TEXT,
-  media TEXT,
+  media_type TEXT,
   reactions INTEGER DEFAULT 0,
   date TEXT NOT NULL,
-  FOREIGN KEY (author_id) REFERENCES authors(id)
+  FOREIGN KEY (author_id) REFERENCES users(id)
 );

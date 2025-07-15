@@ -3,7 +3,6 @@ import * as v from "valibot";
 const rawUserSchema = v.object({
   id: v.number(),
   name: v.string(),
-  avatar: v.string(),
 });
 
 const rawUsersSchema = v.array(rawUserSchema);
@@ -18,7 +17,7 @@ const rawPostSchema = v.object({
   id: v.number(),
   authorName: v.string(),
   caption: v.nullable(v.string()),
-  media: v.nullable(v.string()),
+  mediaType: v.nullable(v.union([v.literal("video"), v.literal("image")])),
   reactions: v.number(),
   date: v.string(),
 });
