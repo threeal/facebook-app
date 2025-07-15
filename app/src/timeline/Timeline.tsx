@@ -3,7 +3,15 @@ import { useQuery } from "@tanstack/react-query";
 import { parsePostsSchema } from "shared";
 import Post from "./post/Post";
 
-const Timeline: React.FC = () => {
+interface TimeLineProps {
+  isAdminModeEnabled: boolean;
+  onAdminDashboardSwitch: () => void;
+}
+
+const Timeline: React.FC<TimeLineProps> = ({
+  isAdminModeEnabled,
+  onAdminDashboardSwitch,
+}) => {
   const { data: posts } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
@@ -16,6 +24,14 @@ const Timeline: React.FC = () => {
 
   return (
     <>
+      {isAdminModeEnabled && (
+        <>
+          <h1 className="admin-title">Timeline</h1>
+          <button className="admin-button" onClick={onAdminDashboardSwitch}>
+            Admin Dashboard
+          </button>
+        </>
+      )}
       {posts.map((post, i) => (
         <Post key={i} post={post} />
       ))}
