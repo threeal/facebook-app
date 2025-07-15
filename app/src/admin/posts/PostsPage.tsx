@@ -2,14 +2,16 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { parseRawPostSchema } from "shared";
 import CreatePostPage from "./CreatePostPage";
+import EditPostPage from "./EditPostPage";
 
-type Page = "main" | "create";
+type Page = "main" | "create" | "edit";
 
 interface PostCardsProps {
   adminSecret: string;
+  onPostClick: (id: number) => void;
 }
 
-const PostCards: React.FC<PostCardsProps> = ({ adminSecret }) => {
+const PostCards: React.FC<PostCardsProps> = ({ adminSecret, onPostClick }) => {
   const { data: posts } = useQuery({
     queryKey: ["admin/posts", adminSecret],
     queryFn: async () => {
@@ -31,7 +33,13 @@ const PostCards: React.FC<PostCardsProps> = ({ adminSecret }) => {
   return (
     <>
       {posts.map((post) => (
-        <div key={post.id} className="admin-card">
+        <div
+          key={post.id}
+          className="admin-card"
+          onClick={() => {
+            onPostClick(post.id);
+          }}
+        >
           ID: {post.id}
           <br />
           Author: {post.authorName}
@@ -56,6 +64,7 @@ export interface PostsPageProps {
 
 const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
   const [page, setPage] = useState<Page>("main");
+  const [selectedId, setSelectedId] = useState(-1);
 
   switch (page) {
     case "main":
@@ -73,13 +82,30 @@ const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
           >
             Create Post
           </button>
-          <PostCards adminSecret={adminSecret} />
+          <PostCards
+            adminSecret={adminSecret}
+            onPostClick={(id) => {
+              setSelectedId(id);
+              setPage("edit");
+            }}
+          />
         </>
       );
 
     case "create":
       return (
         <CreatePostPage
+          adminSecret={adminSecret}
+          onBack={() => {
+            setPage("main");
+          }}
+        />
+      );
+
+    case "edit":
+      return (
+        <EditPostPage
+          id={selectedId}
           adminSecret={adminSecret}
           onBack={() => {
             setPage("main");
