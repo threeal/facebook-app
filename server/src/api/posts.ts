@@ -10,8 +10,9 @@ export default function postsApiRoute(fastify: FastifyInstance) {
       .select([
         "posts.id",
         "users.id as authorId",
-        "posts.timestamp",
         "users.name as authorName",
+        "users.has_avatar as authorHasAvatar",
+        "posts.timestamp",
         "posts.caption",
         "posts.media_type as mediaType",
         "posts.reactions",

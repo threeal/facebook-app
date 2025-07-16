@@ -15,11 +15,13 @@ const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
       <button className="admin-button" onClick={onBack}>
         Back
       </button>
-      {users.map(({ id, name }) => (
+      {users.map(({ id, name, hasAvatar }) => (
         <div key={id} className="admin-card">
           ID: {id}
           <br />
           Name: {name}
+          <br />
+          {hasAvatar ? "Has Avatar" : "No Avatar"}
         </div>
       ))}
     </>

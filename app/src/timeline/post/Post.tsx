@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import type { PostSchema } from "shared";
+import defaultAvatar from "./assets/default-avatar.webp";
 import CommentIcon from "./assets/comment-icon.png";
 import LikeIcon from "./assets/like-icon.png";
 import LikeSolidIcon from "./assets/like-solid-icon.png";
@@ -58,7 +59,11 @@ const Post: React.FC<PostProps> = ({ post }) => {
         <div className="post-author-info">
           <div className="post-author-avatar">
             <img
-              src={`/static/users/avatars/${post.authorId.toString()}/40x40.webp`}
+              src={
+                post.authorHasAvatar
+                  ? `/static/users/avatars/${post.authorId.toString()}/40x40.webp`
+                  : defaultAvatar
+              }
             />
           </div>
           <div className="post-author-details">

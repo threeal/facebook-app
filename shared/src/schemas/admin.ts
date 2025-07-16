@@ -1,9 +1,10 @@
 import * as v from "valibot";
-import { positiveInteger, trimmedString } from "./types.js";
+import { integerToBoolean, positiveInteger, trimmedString } from "./types.js";
 
 const adminUserSchema = v.object({
   id: positiveInteger,
   name: trimmedString,
+  hasAvatar: integerToBoolean,
 });
 
 const adminUsersSchema = v.array(adminUserSchema);
