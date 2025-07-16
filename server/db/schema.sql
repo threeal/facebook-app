@@ -9,6 +9,6 @@ CREATE TABLE posts (
   timestamp INTEGER NOT NULL,
   caption TEXT NOT NULL DEFAULT "",
   media_type TEXT,
-  reactions INTEGER DEFAULT 0,
+  reactions INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (author_id) REFERENCES users(id)
 );
