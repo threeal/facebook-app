@@ -1,6 +1,6 @@
 import React from "react";
 import { useQuery } from "@tanstack/react-query";
-import { parsePostsSchema } from "shared";
+import { parsePosts } from "shared";
 import Post from "./post/Post";
 
 interface TimeLineProps {
@@ -17,7 +17,7 @@ const Timeline: React.FC<TimeLineProps> = ({
     queryFn: async () => {
       const res = await fetch("/api/posts");
       if (!res.ok) throw new Error(res.statusText);
-      const posts = parsePostsSchema(await res.json());
+      const posts = parsePosts(await res.json());
       return posts.sort((a, b) => a.timestamp - b.timestamp);
     },
     initialData: [],

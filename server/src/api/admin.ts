@@ -2,9 +2,11 @@ import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
 
 import {
-  parseAdminCreatePostSchema,
-  parseAdminPostSchema,
-  parseAdminUsersSchema,
+  AdminPostsInput,
+  AdminUsersInput,
+  parseAdminCreatePost,
+  parseAdminPosts,
+  parseAdminUsers,
 } from "shared";
 
 import { db } from "../db.js";
@@ -24,17 +26,17 @@ export default function adminApiRoute(fastify: FastifyInstance) {
 
   fastify.get("/api/admin/users", async (request) => {
     assertAdminSecret(request);
-    const rows = await db
+    const rows: AdminUsersInput = await db
       .selectFrom("users")
       .select(["id", "name", "has_avatar as hasAvatar"])
       .execute();
 
-    return parseAdminUsersSchema(rows);
+    return parseAdminUsers(rows);
   });
 
   fastify.get("/api/admin/posts", async (request) => {
     assertAdminSecret(request);
-    const rows = await db
+    const rows: AdminPostsInput = await db
       .selectFrom("posts")
       .innerJoin("users", "posts.author_id", "users.id")
       .select([
@@ -47,12 +49,12 @@ export default function adminApiRoute(fastify: FastifyInstance) {
       ])
       .execute();
 
-    return parseAdminPostSchema(rows);
+    return parseAdminPosts(rows);
   });
 
   fastify.post("/api/admin/posts", async (request) => {
     assertAdminSecret(request);
-    const post = parseAdminCreatePostSchema(request.body);
+    const post = parseAdminCreatePost(request.body);
     await db
       .insertInto("posts")
       .values({

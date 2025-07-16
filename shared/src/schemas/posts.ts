@@ -12,10 +12,12 @@ const postSchema = v.object({
   reactions: positiveInteger,
 });
 
+export type PostOutput = v.InferOutput<typeof postSchema>;
+
 const postsSchema = v.array(postSchema);
 
-export type PostSchema = v.InferInput<typeof postSchema>;
+export type PostsInput = v.InferInput<typeof postsSchema>;
 
-export function parsePostsSchema(data: unknown) {
-  return v.parse(postsSchema, data);
+export function parsePosts(input: unknown) {
+  return v.parse(postsSchema, input);
 }
