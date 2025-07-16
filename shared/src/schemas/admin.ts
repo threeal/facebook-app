@@ -1,40 +1,41 @@
 import * as v from "valibot";
+import { positiveInteger, trimmedString } from "./types.js";
 
-const rawUserSchema = v.object({
-  id: v.number(),
-  name: v.string(),
+const adminUserSchema = v.object({
+  id: positiveInteger,
+  name: trimmedString,
 });
 
-const rawUsersSchema = v.array(rawUserSchema);
+const adminUsersSchema = v.array(adminUserSchema);
 
-export type RawUserSchema = v.InferInput<typeof rawUserSchema>;
+export type AdminUserSchema = v.InferInput<typeof adminUserSchema>;
 
-export function parseRawUsersSchema(data: unknown) {
-  return v.parse(rawUsersSchema, data);
+export function parseAdminUsersSchema(data: unknown) {
+  return v.parse(adminUsersSchema, data);
 }
 
-const rawPostSchema = v.object({
-  id: v.number(),
-  authorName: v.string(),
-  timestamp: v.number(),
-  caption: v.string(),
+const adminPostSchema = v.object({
+  id: positiveInteger,
+  authorName: trimmedString,
+  timestamp: positiveInteger,
+  caption: trimmedString,
   mediaType: v.nullable(v.union([v.literal("video"), v.literal("image")])),
-  reactions: v.number(),
+  reactions: positiveInteger,
 });
 
-const rawPostsSchema = v.array(rawPostSchema);
+const adminPostsSchema = v.array(adminPostSchema);
 
-export type RawPostSchema = v.InferInput<typeof rawPostSchema>;
+export type AdminPostSchema = v.InferInput<typeof adminPostSchema>;
 
-export function parseRawPostSchema(data: unknown) {
-  return v.parse(rawPostsSchema, data);
+export function parseAdminPostSchema(data: unknown) {
+  return v.parse(adminPostsSchema, data);
 }
 
 const adminCreatePostSchema = v.object({
-  authorId: v.number(),
-  timestamp: v.number(),
-  caption: v.string(),
-  reactions: v.number(),
+  authorId: positiveInteger,
+  timestamp: positiveInteger,
+  caption: trimmedString,
+  reactions: positiveInteger,
 });
 
 export type AdminCreatePostSchema = v.InferInput<typeof adminCreatePostSchema>;

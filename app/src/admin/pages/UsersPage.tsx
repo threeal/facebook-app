@@ -1,5 +1,5 @@
 import React from "react";
-import { useRawUsers } from "../hooks";
+import { useAdminUsers } from "../hooks";
 
 export interface UsersPageProps {
   adminSecret: string;
@@ -7,7 +7,7 @@ export interface UsersPageProps {
 }
 
 const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
-  const users = useRawUsers(adminSecret);
+  const users = useAdminUsers(adminSecret);
 
   return (
     <>

@@ -1,9 +1,9 @@
 import { FastifyInstance } from "fastify";
-import type { PostSchema } from "shared";
+import { parsePostsSchema } from "shared";
 import { db } from "../db.js";
 
 export default function postsApiRoute(fastify: FastifyInstance) {
-  fastify.get("/api/posts", async (): Promise<PostSchema[]> => {
+  fastify.get("/api/posts", async () => {
     const rows = await db
       .selectFrom("posts")
       .innerJoin("users", "posts.author_id", "users.id")
@@ -18,16 +18,6 @@ export default function postsApiRoute(fastify: FastifyInstance) {
       ])
       .execute();
 
-    return rows.map((row) => ({
-      id: row.id,
-      author: {
-        id: row.authorId,
-        name: row.authorName,
-      },
-      timestamp: row.timestamp,
-      caption: row.caption,
-      mediaType: row.mediaType,
-      reactions: row.reactions,
-    }));
+    return parsePostsSchema(rows);
   });
 }

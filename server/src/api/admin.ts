@@ -3,8 +3,8 @@ import httpErrors from "http-errors";
 
 import {
   parseAdminCreatePostSchema,
-  RawPostSchema,
-  RawUserSchema,
+  parseAdminPostSchema,
+  parseAdminUsersSchema,
 } from "shared";
 
 import { db } from "../db.js";
@@ -22,14 +22,15 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     return null;
   });
 
-  fastify.get("/api/admin/users", async (request): Promise<RawUserSchema[]> => {
+  fastify.get("/api/admin/users", async (request) => {
     assertAdminSecret(request);
-    return db.selectFrom("users").select(["id", "name"]).execute();
+    const rows = await db.selectFrom("users").select(["id", "name"]).execute();
+    return parseAdminUsersSchema(rows);
   });
 
-  fastify.get("/api/admin/posts", async (request): Promise<RawPostSchema[]> => {
+  fastify.get("/api/admin/posts", async (request) => {
     assertAdminSecret(request);
-    return db
+    const rows = await db
       .selectFrom("posts")
       .innerJoin("users", "posts.author_id", "users.id")
       .select([
@@ -41,9 +42,11 @@ export default function adminApiRoute(fastify: FastifyInstance) {
         "posts.reactions",
       ])
       .execute();
+
+    return parseAdminPostSchema(rows);
   });
 
-  fastify.post("/api/admin/posts", async (request): Promise<void> => {
+  fastify.post("/api/admin/posts", async (request) => {
     assertAdminSecret(request);
     const post = parseAdminCreatePostSchema(request.body);
     await db
@@ -51,7 +54,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
       .values({
         author_id: post.authorId,
         timestamp: post.timestamp,
-        caption: post.caption.trim(),
+        caption: post.caption,
         media_type: null,
         reactions: post.reactions,
       })
@@ -60,7 +63,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
 
   fastify.delete<{
     Params: { id: number };
-  }>("/api/admin/posts/:id", async (request): Promise<void> => {
+  }>("/api/admin/posts/:id", async (request) => {
     assertAdminSecret(request);
     const { id } = request.params;
     await db.deleteFrom("posts").where("id", "=", id).execute();

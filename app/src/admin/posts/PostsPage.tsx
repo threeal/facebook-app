@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { parseRawPostSchema } from "shared";
+import { parseAdminPostSchema } from "shared";
 import CreatePostPage from "./CreatePostPage";
 import EditPostPage from "./EditPostPage";
 
@@ -20,7 +20,7 @@ const PostCards: React.FC<PostCardsProps> = ({ adminSecret, onPostClick }) => {
           headers: { "admin-secret": adminSecret },
         });
         if (!res.ok) throw new Error(res.statusText);
-        const posts = parseRawPostSchema(await res.json());
+        const posts = parseAdminPostSchema(await res.json());
         return posts.sort((a, b) => a.timestamp - b.timestamp);
       } catch (err) {
         console.error("Failed to fetch posts:", err);
@@ -32,30 +32,27 @@ const PostCards: React.FC<PostCardsProps> = ({ adminSecret, onPostClick }) => {
 
   return (
     <>
-      {posts.map((post) => {
-        const trimmedCaption = post.caption.trim();
-        return (
-          <div
-            key={post.id}
-            className="admin-card"
-            onClick={() => {
-              onPostClick(post.id);
-            }}
-          >
-            ID: {post.id}
-            <br />
-            Author: {post.authorName}
-            <br />
-            Date: {new Date(post.timestamp * 1000).toLocaleDateString()}
-            <br />
-            Caption: {trimmedCaption !== "" ? trimmedCaption : "_"}
-            <br />
-            Media Type: {post.mediaType ?? "_"}
-            <br />
-            Reactions: {post.reactions}
-          </div>
-        );
-      })}
+      {posts.map((post) => (
+        <div
+          key={post.id}
+          className="admin-card"
+          onClick={() => {
+            onPostClick(post.id);
+          }}
+        >
+          ID: {post.id}
+          <br />
+          Author: {post.authorName}
+          <br />
+          Date: {new Date(post.timestamp * 1000).toLocaleDateString()}
+          <br />
+          Caption: {post.caption !== "" ? post.caption : "_"}
+          <br />
+          Media Type: {post.mediaType ?? "_"}
+          <br />
+          Reactions: {post.reactions}
+        </div>
+      ))}
     </>
   );
 };
