@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import type { AdminCreatePostSchema } from "shared";
+import React, { useMemo, useState } from "react";
+import { parseAdminCreatePostSchema } from "shared";
 import { useAdminUsers } from "../hooks";
 
 export interface CreatePostPageProps {
@@ -20,22 +20,29 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   const users = useAdminUsers(adminSecret);
   const sortedUsers = users.sort((a, b) => a.name.localeCompare(b.name));
 
-  const createPost = async () => {
-    setIsCreating(true);
+  const post = useMemo(() => {
     try {
-      const data: AdminCreatePostSchema = {
+      return parseAdminCreatePostSchema({
         authorId,
         timestamp,
         caption,
         reactions,
-      };
+      });
+    } catch {
+      return null;
+    }
+  }, [authorId, timestamp, caption, reactions]);
+
+  const createPost = async () => {
+    setIsCreating(true);
+    try {
       const res = await fetch("/api/admin/posts", {
         method: "POST",
         headers: {
           "admin-secret": adminSecret,
           "content-type": "application/json",
         },
-        body: JSON.stringify(data),
+        body: JSON.stringify(post),
       });
       if (!res.ok) throw new Error(res.statusText);
     } catch (err) {
@@ -92,18 +99,12 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
         placeholder="Reactions"
         inputMode="numeric"
         onChange={(e) => {
-          setReactions(Math.floor(e.target.valueAsNumber));
+          setReactions(e.target.valueAsNumber);
         }}
       />
       <button
         className="admin-button"
-        disabled={
-          isCreating ||
-          authorId == -1 ||
-          timestamp == -1 ||
-          isNaN(reactions) ||
-          reactions < 0
-        }
+        disabled={isCreating || !post}
         onClick={() => void createPost()}
       >
         {isCreating ? "Creating Post..." : "Create Post"}
