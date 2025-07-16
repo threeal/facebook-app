@@ -17,7 +17,7 @@ const rawPostSchema = v.object({
   id: v.number(),
   authorName: v.string(),
   timestamp: v.number(),
-  caption: v.nullable(v.string()),
+  caption: v.string(),
   mediaType: v.nullable(v.union([v.literal("video"), v.literal("image")])),
   reactions: v.number(),
 });

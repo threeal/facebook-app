@@ -10,7 +10,7 @@ interface Database {
     id: Generated<number>;
     author_id: number;
     timestamp: number;
-    caption: string | null;
+    caption: Generated<string>;
     media_type: "image" | "video" | null;
     reactions: Generated<number>;
   };

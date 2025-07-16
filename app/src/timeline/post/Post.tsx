@@ -46,6 +46,7 @@ function formatDate(timestamp: number): string {
 const Post: React.FC<PostProps> = ({ post }) => {
   const [isLiked, setIsLiked] = useState(false);
 
+  const trimmedCaption = post.caption.trim();
   const reactions = post.reactions + (isLiked ? 1 : 0);
 
   const onLikeClicked = () => {
@@ -79,14 +80,14 @@ const Post: React.FC<PostProps> = ({ post }) => {
           </button>
         </div>
       </div>
-      {post.caption && (
+      {trimmedCaption !== "" && (
         <div
           className="post-caption"
           style={{
             marginBottom: !post.mediaType && reactions > 0 ? "2px" : "12px",
           }}
         >
-          {post.caption}
+          {trimmedCaption}
         </div>
       )}
       {post.mediaType && (
