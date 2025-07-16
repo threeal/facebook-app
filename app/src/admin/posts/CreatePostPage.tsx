@@ -45,6 +45,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
         body: JSON.stringify(post),
       });
       if (!res.ok) throw new Error(res.statusText);
+      onBack();
     } catch (err) {
       console.error("Failed to create post:", err);
     } finally {
