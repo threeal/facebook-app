@@ -24,7 +24,11 @@ export default function adminApiRoute(fastify: FastifyInstance) {
 
   fastify.get("/api/admin/users", async (request) => {
     assertAdminSecret(request);
-    const rows = await db.selectFrom("users").select(["id", "name"]).execute();
+    const rows = await db
+      .selectFrom("users")
+      .select(["id", "name", "has_avatar as hasAvatar"])
+      .execute();
+
     return parseAdminUsersSchema(rows);
   });
 
