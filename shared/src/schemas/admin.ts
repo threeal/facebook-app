@@ -1,19 +1,19 @@
 import * as v from "valibot";
 
-const rawUserSchema = v.object({
+const adminUserSchema = v.object({
   id: v.number(),
   name: v.string(),
 });
 
-const rawUsersSchema = v.array(rawUserSchema);
+const adminUsersSchema = v.array(adminUserSchema);
 
-export type RawUserSchema = v.InferInput<typeof rawUserSchema>;
+export type AdminUserSchema = v.InferInput<typeof adminUserSchema>;
 
-export function parseRawUsersSchema(data: unknown) {
-  return v.parse(rawUsersSchema, data);
+export function parseAdminUsersSchema(data: unknown) {
+  return v.parse(adminUsersSchema, data);
 }
 
-const rawPostSchema = v.object({
+const adminPostSchema = v.object({
   id: v.number(),
   authorName: v.string(),
   timestamp: v.number(),
@@ -22,12 +22,12 @@ const rawPostSchema = v.object({
   reactions: v.number(),
 });
 
-const rawPostsSchema = v.array(rawPostSchema);
+const adminPostsSchema = v.array(adminPostSchema);
 
-export type RawPostSchema = v.InferInput<typeof rawPostSchema>;
+export type AdminPostSchema = v.InferInput<typeof adminPostSchema>;
 
-export function parseRawPostSchema(data: unknown) {
-  return v.parse(rawPostsSchema, data);
+export function parseAdminPostSchema(data: unknown) {
+  return v.parse(adminPostsSchema, data);
 }
 
 const adminCreatePostSchema = v.object({

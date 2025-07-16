@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import type { AdminCreatePostSchema } from "shared";
-import { useRawUsers } from "../hooks";
+import { useAdminUsers } from "../hooks";
 
 export interface CreatePostPageProps {
   adminSecret: string;
@@ -17,7 +17,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   const [caption, setCaption] = useState("");
   const [reactions, setReactions] = useState(0);
 
-  const users = useRawUsers(adminSecret);
+  const users = useAdminUsers(adminSecret);
   const sortedUsers = users.sort((a, b) => a.name.localeCompare(b.name));
 
   const createPost = async () => {
