@@ -2,9 +2,9 @@ import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
 
 import {
-  AdminPostSchema,
-  AdminUserSchema,
   parseAdminCreatePostSchema,
+  parseAdminPostSchema,
+  parseAdminUsersSchema,
 } from "shared";
 
 import { db } from "../db.js";
@@ -22,34 +22,31 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     return null;
   });
 
-  fastify.get(
-    "/api/admin/users",
-    async (request): Promise<AdminUserSchema[]> => {
-      assertAdminSecret(request);
-      return db.selectFrom("users").select(["id", "name"]).execute();
-    },
-  );
+  fastify.get("/api/admin/users", async (request) => {
+    assertAdminSecret(request);
+    const rows = await db.selectFrom("users").select(["id", "name"]).execute();
+    return parseAdminUsersSchema(rows);
+  });
 
-  fastify.get(
-    "/api/admin/posts",
-    async (request): Promise<AdminPostSchema[]> => {
-      assertAdminSecret(request);
-      return db
-        .selectFrom("posts")
-        .innerJoin("users", "posts.author_id", "users.id")
-        .select([
-          "posts.id",
-          "users.name as authorName",
-          "posts.timestamp",
-          "posts.caption",
-          "posts.media_type as mediaType",
-          "posts.reactions",
-        ])
-        .execute();
-    },
-  );
+  fastify.get("/api/admin/posts", async (request) => {
+    assertAdminSecret(request);
+    const rows = await db
+      .selectFrom("posts")
+      .innerJoin("users", "posts.author_id", "users.id")
+      .select([
+        "posts.id",
+        "users.name as authorName",
+        "posts.timestamp",
+        "posts.caption",
+        "posts.media_type as mediaType",
+        "posts.reactions",
+      ])
+      .execute();
 
-  fastify.post("/api/admin/posts", async (request): Promise<void> => {
+    return parseAdminPostSchema(rows);
+  });
+
+  fastify.post("/api/admin/posts", async (request) => {
     assertAdminSecret(request);
     const post = parseAdminCreatePostSchema(request.body);
     await db
@@ -57,7 +54,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
       .values({
         author_id: post.authorId,
         timestamp: post.timestamp,
-        caption: post.caption.trim(),
+        caption: post.caption,
         media_type: null,
         reactions: post.reactions,
       })
@@ -66,7 +63,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
 
   fastify.delete<{
     Params: { id: number };
-  }>("/api/admin/posts/:id", async (request): Promise<void> => {
+  }>("/api/admin/posts/:id", async (request) => {
     assertAdminSecret(request);
     const { id } = request.params;
     await db.deleteFrom("posts").where("id", "=", id).execute();

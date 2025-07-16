@@ -1,8 +1,9 @@
 import * as v from "valibot";
+import { positiveInteger, trimmedString } from "./types.js";
 
 const adminUserSchema = v.object({
-  id: v.number(),
-  name: v.string(),
+  id: positiveInteger,
+  name: trimmedString,
 });
 
 const adminUsersSchema = v.array(adminUserSchema);
@@ -14,12 +15,12 @@ export function parseAdminUsersSchema(data: unknown) {
 }
 
 const adminPostSchema = v.object({
-  id: v.number(),
-  authorName: v.string(),
-  timestamp: v.number(),
-  caption: v.string(),
+  id: positiveInteger,
+  authorName: trimmedString,
+  timestamp: positiveInteger,
+  caption: trimmedString,
   mediaType: v.nullable(v.union([v.literal("video"), v.literal("image")])),
-  reactions: v.number(),
+  reactions: positiveInteger,
 });
 
 const adminPostsSchema = v.array(adminPostSchema);
@@ -31,10 +32,10 @@ export function parseAdminPostSchema(data: unknown) {
 }
 
 const adminCreatePostSchema = v.object({
-  authorId: v.number(),
-  timestamp: v.number(),
-  caption: v.string(),
-  reactions: v.number(),
+  authorId: positiveInteger,
+  timestamp: positiveInteger,
+  caption: trimmedString,
+  reactions: positiveInteger,
 });
 
 export type AdminCreatePostSchema = v.InferInput<typeof adminCreatePostSchema>;

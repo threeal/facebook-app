@@ -83,7 +83,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
         className="admin-input"
         placeholder="Caption"
         onChange={(e) => {
-          setCaption(e.target.value.trim());
+          setCaption(e.target.value);
         }}
       ></textarea>
       <input

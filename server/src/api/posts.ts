@@ -1,10 +1,10 @@
 import { FastifyInstance } from "fastify";
-import type { PostSchema } from "shared";
+import { parsePostsSchema } from "shared";
 import { db } from "../db.js";
 
 export default function postsApiRoute(fastify: FastifyInstance) {
-  fastify.get("/api/posts", async (): Promise<PostSchema[]> => {
-    return await db
+  fastify.get("/api/posts", async () => {
+    const rows = await db
       .selectFrom("posts")
       .innerJoin("users", "posts.author_id", "users.id")
       .select([
@@ -17,5 +17,7 @@ export default function postsApiRoute(fastify: FastifyInstance) {
         "posts.reactions",
       ])
       .execute();
+
+    return parsePostsSchema(rows);
   });
 }

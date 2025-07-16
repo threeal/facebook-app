@@ -1,13 +1,14 @@
 import * as v from "valibot";
+import { positiveInteger, trimmedString } from "./types.js";
 
 const postSchema = v.object({
-  id: v.number(),
-  authorId: v.number(),
-  authorName: v.string(),
-  timestamp: v.number(),
-  caption: v.string(),
+  id: positiveInteger,
+  authorId: positiveInteger,
+  authorName: trimmedString,
+  timestamp: positiveInteger,
+  caption: trimmedString,
   mediaType: v.nullable(v.union([v.literal("video"), v.literal("image")])),
-  reactions: v.number(),
+  reactions: positiveInteger,
 });
 
 const postsSchema = v.array(postSchema);
