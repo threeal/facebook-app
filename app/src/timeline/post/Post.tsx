@@ -59,11 +59,11 @@ const Post: React.FC<PostProps> = ({ post }) => {
         <div className="post-author-info">
           <div className="post-author-avatar">
             <img
-              src={`/static/users/avatars/${post.author.id.toString()}/40x40.webp`}
+              src={`/static/users/avatars/${post.authorId.toString()}/40x40.webp`}
             />
           </div>
           <div className="post-author-details">
-            <h3>{post.author.name}</h3>
+            <h3>{post.authorName}</h3>
             <div className="post-meta">
               <span>{formatDate(post.timestamp)}</span>
               <span>•</span>
