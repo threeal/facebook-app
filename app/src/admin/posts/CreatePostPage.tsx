@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { parseAdminCreatePostSchema } from "shared";
+import { parseAdminCreatePost, type AdminCreatePostInput } from "shared";
 import { useAdminUsers } from "../hooks";
 
 export interface CreatePostPageProps {
@@ -22,12 +22,13 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
 
   const post = useMemo(() => {
     try {
-      return parseAdminCreatePostSchema({
+      const input: AdminCreatePostInput = {
         authorId,
         timestamp,
         caption,
         reactions,
-      });
+      };
+      return parseAdminCreatePost(input);
     } catch {
       return null;
     }

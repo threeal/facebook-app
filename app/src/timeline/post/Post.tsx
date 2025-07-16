@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { PostSchema } from "shared";
+import type { PostOutput } from "shared";
 import defaultAvatar from "./assets/default-avatar.webp";
 import CommentIcon from "./assets/comment-icon.png";
 import LikeIcon from "./assets/like-icon.png";
@@ -14,7 +14,7 @@ import PostMedia from "./PostMedia";
 import "./Post.css";
 
 export interface PostProps {
-  post: PostSchema;
+  post: PostOutput;
 }
 
 const monthNames = [

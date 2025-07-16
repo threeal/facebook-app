@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { parseAdminPostSchema } from "shared";
+import { parseAdminPosts } from "shared";
 import CreatePostPage from "./CreatePostPage";
 import EditPostPage from "./EditPostPage";
 
@@ -20,7 +20,7 @@ const PostCards: React.FC<PostCardsProps> = ({ adminSecret, onPostClick }) => {
           headers: { "admin-secret": adminSecret },
         });
         if (!res.ok) throw new Error(res.statusText);
-        const posts = parseAdminPostSchema(await res.json());
+        const posts = parseAdminPosts(await res.json());
         return posts.sort((a, b) => a.timestamp - b.timestamp);
       } catch (err) {
         console.error("Failed to fetch posts:", err);
