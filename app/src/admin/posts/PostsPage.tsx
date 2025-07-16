@@ -32,27 +32,30 @@ const PostCards: React.FC<PostCardsProps> = ({ adminSecret, onPostClick }) => {
 
   return (
     <>
-      {posts.map((post) => (
-        <div
-          key={post.id}
-          className="admin-card"
-          onClick={() => {
-            onPostClick(post.id);
-          }}
-        >
-          ID: {post.id}
-          <br />
-          Author: {post.authorName}
-          <br />
-          Date: {new Date(post.timestamp * 1000).toLocaleDateString()}
-          <br />
-          Caption: {post.caption ?? "_"}
-          <br />
-          Media Type: {post.mediaType ?? "_"}
-          <br />
-          Reactions: {post.reactions}
-        </div>
-      ))}
+      {posts.map((post) => {
+        const trimmedCaption = post.caption.trim();
+        return (
+          <div
+            key={post.id}
+            className="admin-card"
+            onClick={() => {
+              onPostClick(post.id);
+            }}
+          >
+            ID: {post.id}
+            <br />
+            Author: {post.authorName}
+            <br />
+            Date: {new Date(post.timestamp * 1000).toLocaleDateString()}
+            <br />
+            Caption: {trimmedCaption !== "" ? trimmedCaption : "_"}
+            <br />
+            Media Type: {post.mediaType ?? "_"}
+            <br />
+            Reactions: {post.reactions}
+          </div>
+        );
+      })}
     </>
   );
 };

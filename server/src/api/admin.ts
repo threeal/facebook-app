@@ -51,7 +51,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
       .values({
         author_id: post.authorId,
         timestamp: post.timestamp,
-        caption: post.caption,
+        caption: post.caption.trim(),
         media_type: null,
         reactions: post.reactions,
       })

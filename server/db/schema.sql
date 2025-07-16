@@ -7,8 +7,8 @@ CREATE TABLE posts (
   id INTEGER PRIMARY KEY AUTOINCREMENT,
   author_id INTEGER NOT NULL,
   timestamp INTEGER NOT NULL,
-  caption TEXT,
+  caption TEXT NOT NULL DEFAULT "",
   media_type TEXT,
-  reactions INTEGER DEFAULT 0,
+  reactions INTEGER NOT NULL DEFAULT 0,
   FOREIGN KEY (author_id) REFERENCES users(id)
 );
