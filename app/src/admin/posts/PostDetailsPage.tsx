@@ -48,13 +48,13 @@ const ConfirmDeletePostPage: React.FC<ConfirmDeletePostPageProps> = ({
   );
 };
 
-export interface EditPostPageProps {
+export interface PostDetailsPageProps {
   id: number;
   adminSecret: string;
   onBack: () => void;
 }
 
-const EditPostPage: React.FC<EditPostPageProps> = ({
+const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
   id,
   adminSecret,
   onBack,
@@ -72,7 +72,7 @@ const EditPostPage: React.FC<EditPostPageProps> = ({
     />
   ) : (
     <>
-      <h1 className="admin-title">Edit Post {id}</h1>
+      <h1 className="admin-title">Post {id}</h1>
       <button className="admin-button" onClick={onBack}>
         Back
       </button>
@@ -88,4 +88,4 @@ const EditPostPage: React.FC<EditPostPageProps> = ({
   );
 };
 
-export default EditPostPage;
+export default PostDetailsPage;

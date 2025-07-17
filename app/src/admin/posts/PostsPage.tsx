@@ -2,7 +2,7 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { parseAdminPosts } from "shared";
 import CreatePostPage from "./CreatePostPage";
-import EditPostPage from "./EditPostPage";
+import PostDetailsPage from "./PostDetailsPage";
 
 type Page = "main" | "create" | number;
 
@@ -102,7 +102,7 @@ const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
 
     default:
       return (
-        <EditPostPage
+        <PostDetailsPage
           id={page}
           adminSecret={adminSecret}
           onBack={() => {
