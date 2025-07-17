@@ -1,5 +1,10 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
+import { createWriteStream } from "node:fs";
+import { mkdir } from "node:fs/promises";
+import path from "node:path";
+import { pipeline } from "node:stream";
+import { promisify } from "node:util";
 
 import {
   AdminCreatePostResultInput,
@@ -14,6 +19,8 @@ import {
 } from "shared";
 
 import { db } from "../db.js";
+
+const pump = promisify(pipeline);
 
 export default function adminApiRoute(fastify: FastifyInstance) {
   const assertAdminSecret = (request: FastifyRequest) => {
@@ -120,5 +127,25 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     assertAdminSecret(request);
     const { id } = request.params;
     await db.deleteFrom("posts").where("id", "=", id).execute();
+  });
+
+  fastify.post<{
+    Params: { id: string };
+  }>("/api/admin/posts/:id/media", async (request) => {
+    assertAdminSecret(request);
+    const { id } = request.params;
+
+    const data = await request.file();
+    if (!data || data.mimetype !== "image/webp") throw httpErrors.BadRequest();
+
+    const outFile = `data/static/posts/medias/${id}/390.webp`;
+    await mkdir(path.dirname(outFile));
+    await pump(data.file, createWriteStream(outFile));
+
+    await db
+      .updateTable("posts")
+      .set({ media_type: "image" })
+      .where("id", "=", parseInt(id))
+      .execute();
   });
 }

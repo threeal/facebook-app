@@ -1,4 +1,5 @@
 import fastifyHttpProxy from "@fastify/http-proxy";
+import fastifyMultipart from "@fastify/multipart";
 import fastifyStatic from "@fastify/static";
 import "dotenv/config";
 import Fastify from "fastify";
@@ -8,6 +9,7 @@ import postsApiRoute from "./api/posts.js";
 
 const fastify = Fastify({ logger: true });
 
+fastify.register(fastifyMultipart);
 fastify.register(postsApiRoute);
 
 if (process.env.ADMIN_SECRET) {
