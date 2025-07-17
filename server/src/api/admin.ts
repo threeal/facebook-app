@@ -4,7 +4,7 @@ import httpErrors from "http-errors";
 import {
   AdminPostsInput,
   AdminUsersInput,
-  parseAdminCreatePost,
+  parseAdminSubmitPost,
   parseAdminPosts,
   parseAdminUsers,
 } from "shared";
@@ -54,7 +54,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
 
   fastify.post("/api/admin/posts", async (request) => {
     assertAdminSecret(request);
-    const post = parseAdminCreatePost(request.body);
+    const post = parseAdminSubmitPost(request.body);
     await db
       .insertInto("posts")
       .values({
