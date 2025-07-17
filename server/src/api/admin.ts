@@ -4,8 +4,8 @@ import httpErrors from "http-errors";
 import {
   AdminPostsInput,
   AdminUsersInput,
-  parseAdminSubmitPost,
   parseAdminPosts,
+  parseAdminSubmitPost,
   parseAdminUsers,
 } from "shared";
 
@@ -64,6 +64,24 @@ export default function adminApiRoute(fastify: FastifyInstance) {
         media_type: null,
         reactions: post.reactions,
       })
+      .execute();
+  });
+
+  fastify.put<{
+    Params: { id: number };
+  }>("/api/admin/posts/:id", async (request) => {
+    assertAdminSecret(request);
+    const { id } = request.params;
+    const post = parseAdminSubmitPost(request.body);
+    await db
+      .updateTable("posts")
+      .set({
+        author_id: post.authorId,
+        timestamp: post.timestamp,
+        caption: post.caption,
+        reactions: post.reactions,
+      })
+      .where("id", "=", id)
       .execute();
   });
 
