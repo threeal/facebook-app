@@ -2,8 +2,10 @@ import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
 
 import {
+  AdminPostDetailsInput,
   AdminPostsInput,
   AdminUsersInput,
+  parseAdminPostDetails,
   parseAdminPosts,
   parseAdminSubmitPost,
   parseAdminUsers,
@@ -65,6 +67,28 @@ export default function adminApiRoute(fastify: FastifyInstance) {
         reactions: post.reactions,
       })
       .execute();
+  });
+
+  fastify.get<{
+    Params: { id: number };
+  }>("/api/admin/posts/:id", async (request) => {
+    assertAdminSecret(request);
+    const { id } = request.params;
+    const rows: AdminPostDetailsInput = await db
+      .selectFrom("posts")
+      .innerJoin("users", "posts.author_id", "users.id")
+      .select([
+        "posts.id",
+        "users.id as authorId",
+        "posts.timestamp",
+        "posts.caption",
+        "posts.media_type as mediaType",
+        "posts.reactions",
+      ])
+      .where("posts.id", "=", id)
+      .executeTakeFirstOrThrow();
+
+    return parseAdminPostDetails(rows);
   });
 
   fastify.put<{
