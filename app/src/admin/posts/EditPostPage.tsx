@@ -34,10 +34,14 @@ const ConfirmDeletePostPage: React.FC<ConfirmDeletePostPageProps> = ({
   return (
     <>
       <h1 className="admin-title">Confirm Delete Post {id}</h1>
-      <button className="admin-button" onClick={() => void deletePost()}>
+      <button
+        className="admin-button"
+        disabled={isDeleting}
+        onClick={() => void deletePost()}
+      >
         {isDeleting ? "Deleting Post..." : "Delete Post"}
       </button>
-      <button className="admin-button" onClick={onCancel}>
+      <button className="admin-button" disabled={isDeleting} onClick={onCancel}>
         Cancel
       </button>
     </>
