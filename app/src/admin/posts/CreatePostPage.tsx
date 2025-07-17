@@ -57,12 +57,13 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   return (
     <>
       <h1 className="admin-title">Create Post</h1>
-      <button className="admin-button" onClick={onBack}>
+      <button className="admin-button" disabled={isCreating} onClick={onBack}>
         Back
       </button>
       <select
         className="admin-input"
         defaultValue={-1}
+        disabled={isCreating}
         onChange={(e) => {
           setAuthorId(parseInt(e.target.value));
         }}
@@ -79,6 +80,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
       <input
         className="admin-input"
         type="date"
+        disabled={isCreating}
         onChange={(e) => {
           if (e.target.valueAsDate) {
             const milliseconds = e.target.valueAsDate.getTime();
@@ -91,6 +93,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
       <textarea
         className="admin-input"
         placeholder="Caption"
+        disabled={isCreating}
         onChange={(e) => {
           setCaption(e.target.value);
         }}
@@ -100,6 +103,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
         type="number"
         placeholder="Reactions"
         inputMode="numeric"
+        disabled={isCreating}
         onChange={(e) => {
           setReactions(e.target.valueAsNumber);
         }}

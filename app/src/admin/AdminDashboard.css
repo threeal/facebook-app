@@ -17,7 +17,7 @@
 }
 
 .admin-button:disabled {
-  cursor: not-allowed;
+  cursor: auto;
   color: gray;
 }
 
@@ -33,6 +33,10 @@
   font-size: 14px;
 }
 
+.admin-input:disabled {
+  color: gray;
+}
+
 .admin-input:focus {
   outline: none;
 }
@@ -44,6 +48,10 @@
 textarea.admin-input {
   min-height: 80px;
   resize: vertical;
+}
+
+textarea.admin-input:disabled {
+  resize: none;
 }
 
 .admin-card {
