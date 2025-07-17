@@ -1,12 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useMemo, useState } from "react";
-
-import {
-  parseAdminPostDetails,
-  parseAdminSubmitPost,
-  type AdminSubmitPostInput,
-} from "shared";
-
+import React, { useState } from "react";
+import { parseAdminPostDetails, type AdminSubmitPostInput } from "shared";
+import { useParseAdminSubmitPost } from "../hooks";
 import NumberInput from "../inputs/NumberInput";
 import TextAreaInput from "../inputs/TextAreaInput";
 import TimestampInput from "../inputs/TimestampInput";
@@ -28,10 +23,6 @@ const MainPage: React.FC<MainPageProps> = ({
   onDelete,
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
-  const [authorId, setAuthorId] = useState(-1);
-  const [timestamp, setTimestamp] = useState(-1);
-  const [caption, setCaption] = useState("");
-  const [reactions, setReactions] = useState(0);
 
   const { data: postDetails } = useQuery({
     queryKey: ["admin/posts", id, adminSecret],
@@ -50,19 +41,8 @@ const MainPage: React.FC<MainPageProps> = ({
     initialData: null,
   });
 
-  const post = useMemo(() => {
-    try {
-      const input: AdminSubmitPostInput = {
-        authorId,
-        timestamp,
-        caption,
-        reactions,
-      };
-      return parseAdminSubmitPost(input);
-    } catch {
-      return null;
-    }
-  }, [authorId, timestamp, caption, reactions]);
+  const { post, setAuthorId, setTimestamp, setCaption, setReactions } =
+    useParseAdminSubmitPost();
 
   const updatePost = async (post: AdminSubmitPostInput) => {
     setIsUpdating(true);
