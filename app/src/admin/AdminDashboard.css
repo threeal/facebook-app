@@ -21,6 +21,13 @@
   color: gray;
 }
 
+.admin-input-label {
+  margin: 0 10px;
+  color: black;
+  font-size: 12px;
+  text-align: left;
+}
+
 .admin-input {
   box-sizing: border-box;
   margin: 0 4px;

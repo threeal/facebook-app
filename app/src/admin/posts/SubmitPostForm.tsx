@@ -93,6 +93,7 @@ export const SubmitPostForm: React.FC<SubmitPostFormProps> = ({
 
   return (
     <>
+      <label className="admin-input-label">Author</label>
       <select
         className="admin-input"
         ref={authorIdRef}
@@ -107,6 +108,7 @@ export const SubmitPostForm: React.FC<SubmitPostFormProps> = ({
         </option>
         <AuthorOptions adminSecret={adminSecret} />
       </select>
+      <label className="admin-input-label">Date</label>
       <input
         className="admin-input"
         type="date"
@@ -121,19 +123,20 @@ export const SubmitPostForm: React.FC<SubmitPostFormProps> = ({
           }
         }}
       />
+      <label className="admin-input-label">Caption</label>
       <textarea
         className="admin-input"
-        placeholder="Caption"
         ref={captionRef}
         disabled={disabled}
         onChange={(e) => {
           setCaption(e.target.value);
         }}
-      ></textarea>
+      />
+      <label className="admin-input-label">Reactions</label>
       <input
         className="admin-input"
         type="number"
-        placeholder="Reactions"
+        placeholder="0"
         inputMode="numeric"
         ref={reactionsRef}
         disabled={disabled}
