@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useEffect, useMemo, useRef, useState } from "react";
 import { parseAdminSubmitPost, type AdminSubmitPostInput } from "shared";
 import { useAdminUsers } from "../hooks";
 
@@ -19,6 +19,10 @@ const AuthorOptions: React.FC<AuthorOptionsProps> = ({ adminSecret }) => {
 
 export interface SubmitPostFormProps {
   adminSecret: string;
+  initialAuthorId?: number;
+  initialTimestamp?: number;
+  initialCaption?: string;
+  initialReactions?: number;
   disabled: boolean;
   onSubmit: (post: AdminSubmitPostInput) => void;
   children: React.ReactNode;
@@ -26,14 +30,52 @@ export interface SubmitPostFormProps {
 
 export const SubmitPostForm: React.FC<SubmitPostFormProps> = ({
   adminSecret,
+  initialAuthorId,
+  initialTimestamp,
+  initialCaption,
+  initialReactions,
   disabled,
   onSubmit,
   children,
 }) => {
-  const [authorId, setAuthorId] = useState(-1);
-  const [timestamp, setTimestamp] = useState(-1);
-  const [caption, setCaption] = useState("");
-  const [reactions, setReactions] = useState(0);
+  const authorIdRef = useRef<HTMLSelectElement>(null);
+  const timestampRef = useRef<HTMLInputElement>(null);
+  const captionRef = useRef<HTMLTextAreaElement>(null);
+  const reactionsRef = useRef<HTMLInputElement>(null);
+
+  const [authorId, setAuthorId] = useState(initialAuthorId ?? -1);
+  const [timestamp, setTimestamp] = useState(initialTimestamp ?? -1);
+  const [caption, setCaption] = useState(initialCaption ?? "");
+  const [reactions, setReactions] = useState(initialReactions ?? 0);
+
+  useEffect(() => {
+    if (authorIdRef.current && initialAuthorId !== undefined) {
+      authorIdRef.current.value = initialAuthorId.toFixed();
+      setAuthorId(initialAuthorId);
+    }
+  }, [authorIdRef, initialAuthorId]);
+
+  useEffect(() => {
+    if (timestampRef.current && initialTimestamp !== undefined) {
+      const date = new Date(initialTimestamp * 1000);
+      timestampRef.current.value = date.toISOString().split("T")[0];
+      setTimestamp(initialTimestamp);
+    }
+  }, [timestampRef, initialTimestamp]);
+
+  useEffect(() => {
+    if (captionRef.current && initialCaption !== undefined) {
+      captionRef.current.value = initialCaption;
+      setCaption(initialCaption);
+    }
+  }, [captionRef, initialCaption]);
+
+  useEffect(() => {
+    if (reactionsRef.current && initialReactions !== undefined) {
+      reactionsRef.current.value = initialReactions.toFixed();
+      setReactions(initialReactions);
+    }
+  }, [reactionsRef, initialReactions]);
 
   const post = useMemo(() => {
     try {
@@ -53,6 +95,7 @@ export const SubmitPostForm: React.FC<SubmitPostFormProps> = ({
     <>
       <select
         className="admin-input"
+        ref={authorIdRef}
         defaultValue={-1}
         disabled={disabled}
         onChange={(e) => {
@@ -67,6 +110,7 @@ export const SubmitPostForm: React.FC<SubmitPostFormProps> = ({
       <input
         className="admin-input"
         type="date"
+        ref={timestampRef}
         disabled={disabled}
         onChange={(e) => {
           if (e.target.valueAsDate) {
@@ -80,6 +124,7 @@ export const SubmitPostForm: React.FC<SubmitPostFormProps> = ({
       <textarea
         className="admin-input"
         placeholder="Caption"
+        ref={captionRef}
         disabled={disabled}
         onChange={(e) => {
           setCaption(e.target.value);
@@ -90,6 +135,7 @@ export const SubmitPostForm: React.FC<SubmitPostFormProps> = ({
         type="number"
         placeholder="Reactions"
         inputMode="numeric"
+        ref={reactionsRef}
         disabled={disabled}
         onChange={(e) => {
           setReactions(e.target.valueAsNumber);

@@ -2,10 +2,12 @@ import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
 
 import {
+  AdminPostDetailsInput,
   AdminPostsInput,
   AdminUsersInput,
-  parseAdminSubmitPost,
+  parseAdminPostDetails,
   parseAdminPosts,
+  parseAdminSubmitPost,
   parseAdminUsers,
 } from "shared";
 
@@ -64,6 +66,46 @@ export default function adminApiRoute(fastify: FastifyInstance) {
         media_type: null,
         reactions: post.reactions,
       })
+      .execute();
+  });
+
+  fastify.get<{
+    Params: { id: number };
+  }>("/api/admin/posts/:id", async (request) => {
+    assertAdminSecret(request);
+    const { id } = request.params;
+    const rows: AdminPostDetailsInput = await db
+      .selectFrom("posts")
+      .innerJoin("users", "posts.author_id", "users.id")
+      .select([
+        "posts.id",
+        "users.id as authorId",
+        "posts.timestamp",
+        "posts.caption",
+        "posts.media_type as mediaType",
+        "posts.reactions",
+      ])
+      .where("posts.id", "=", id)
+      .executeTakeFirstOrThrow();
+
+    return parseAdminPostDetails(rows);
+  });
+
+  fastify.put<{
+    Params: { id: number };
+  }>("/api/admin/posts/:id", async (request) => {
+    assertAdminSecret(request);
+    const { id } = request.params;
+    const post = parseAdminSubmitPost(request.body);
+    await db
+      .updateTable("posts")
+      .set({
+        author_id: post.authorId,
+        timestamp: post.timestamp,
+        caption: post.caption,
+        reactions: post.reactions,
+      })
+      .where("id", "=", id)
       .execute();
   });
 

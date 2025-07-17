@@ -32,6 +32,21 @@ export function parseAdminPosts(input: unknown) {
   return v.parse(adminPostsSchema, input);
 }
 
+const adminPostDetailsSchema = v.object({
+  id: positiveInteger,
+  authorId: positiveInteger,
+  timestamp: positiveInteger,
+  caption: trimmedString,
+  mediaType: v.nullable(v.union([v.literal("video"), v.literal("image")])),
+  reactions: positiveInteger,
+});
+
+export type AdminPostDetailsInput = v.InferInput<typeof adminPostDetailsSchema>;
+
+export function parseAdminPostDetails(input: unknown) {
+  return v.parse(adminPostDetailsSchema, input);
+}
+
 const adminSubmitPostSchema = v.object({
   authorId: positiveInteger,
   timestamp: positiveInteger,
