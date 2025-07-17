@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import type { AdminCreatePostInput } from "shared";
+import type { AdminSubmitPostInput } from "shared";
 import { SubmitPostForm } from "./SubmitPostForm";
 
 export interface CreatePostPageProps {
@@ -13,7 +13,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
 }) => {
   const [isCreating, setIsCreating] = useState(false);
 
-  const createPost = async (post: AdminCreatePostInput) => {
+  const createPost = async (post: AdminSubmitPostInput) => {
     setIsCreating(true);
     try {
       const res = await fetch("/api/admin/posts", {

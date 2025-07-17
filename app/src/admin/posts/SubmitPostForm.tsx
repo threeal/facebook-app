@@ -1,5 +1,5 @@
 import React, { useMemo, useState } from "react";
-import { parseAdminCreatePost, type AdminCreatePostInput } from "shared";
+import { parseAdminSubmitPost, type AdminSubmitPostInput } from "shared";
 import { useAdminUsers } from "../hooks";
 
 interface AuthorOptionsProps {
@@ -20,7 +20,7 @@ const AuthorOptions: React.FC<AuthorOptionsProps> = ({ adminSecret }) => {
 export interface SubmitPostFormProps {
   adminSecret: string;
   disabled: boolean;
-  onSubmit: (post: AdminCreatePostInput) => void;
+  onSubmit: (post: AdminSubmitPostInput) => void;
   children: React.ReactNode;
 }
 
@@ -37,13 +37,13 @@ export const SubmitPostForm: React.FC<SubmitPostFormProps> = ({
 
   const post = useMemo(() => {
     try {
-      const input: AdminCreatePostInput = {
+      const input: AdminSubmitPostInput = {
         authorId,
         timestamp,
         caption,
         reactions,
       };
-      return parseAdminCreatePost(input);
+      return parseAdminSubmitPost(input);
     } catch {
       return null;
     }

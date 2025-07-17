@@ -32,15 +32,15 @@ export function parseAdminPosts(input: unknown) {
   return v.parse(adminPostsSchema, input);
 }
 
-const adminCreatePostSchema = v.object({
+const adminSubmitPostSchema = v.object({
   authorId: positiveInteger,
   timestamp: positiveInteger,
   caption: trimmedString,
   reactions: positiveInteger,
 });
 
-export type AdminCreatePostInput = v.InferInput<typeof adminCreatePostSchema>;
+export type AdminSubmitPostInput = v.InferInput<typeof adminSubmitPostSchema>;
 
-export function parseAdminCreatePost(input: unknown) {
-  return v.parse(adminCreatePostSchema, input);
+export function parseAdminSubmitPost(input: unknown) {
+  return v.parse(adminSubmitPostSchema, input);
 }
