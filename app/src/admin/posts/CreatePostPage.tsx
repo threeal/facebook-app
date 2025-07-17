@@ -1,6 +1,10 @@
 import React, { useState } from "react";
-import type { AdminSubmitPostInput } from "shared";
-import { SubmitPostForm } from "./SubmitPostForm";
+import { type AdminSubmitPostInput } from "shared";
+import { useParseAdminSubmitPost } from "../hooks";
+import NumberInput from "../inputs/NumberInput";
+import TextAreaInput from "../inputs/TextAreaInput";
+import TimestampInput from "../inputs/TimestampInput";
+import UserSelectInput from "../inputs/UserSelectInput";
 
 export interface CreatePostPageProps {
   adminSecret: string;
@@ -12,6 +16,9 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   onBack,
 }) => {
   const [isCreating, setIsCreating] = useState(false);
+
+  const { post, setAuthorId, setTimestamp, setCaption, setReactions } =
+    useParseAdminSubmitPost();
 
   const createPost = async (post: AdminSubmitPostInput) => {
     setIsCreating(true);
@@ -39,13 +46,44 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
       <button className="admin-button" disabled={isCreating} onClick={onBack}>
         Back
       </button>
-      <SubmitPostForm
+      <UserSelectInput
         adminSecret={adminSecret}
+        label="Author"
         disabled={isCreating}
-        onSubmit={(post) => void createPost(post)}
+        onUserSelected={(userId) => {
+          setAuthorId(userId);
+        }}
+      />
+      <TimestampInput
+        label="Date"
+        disabled={isCreating}
+        onTimestampChanged={(timestamp) => {
+          setTimestamp(timestamp);
+        }}
+      />
+      <TextAreaInput
+        label="Caption"
+        disabled={isCreating}
+        onTextChanged={(text) => {
+          setCaption(text);
+        }}
+      />
+      <NumberInput
+        label="Reactions"
+        disabled={isCreating}
+        onValueChanged={(value) => {
+          setReactions(value);
+        }}
+      />
+      <button
+        className="admin-button"
+        disabled={isCreating || !post}
+        onClick={() => {
+          if (post) void createPost(post);
+        }}
       >
         {isCreating ? "Creating Post..." : "Create Post"}
-      </SubmitPostForm>
+      </button>
     </>
   );
 };
