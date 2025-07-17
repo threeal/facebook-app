@@ -2,9 +2,11 @@ import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
 
 import {
+  AdminCreatePostResultInput,
   AdminPostDetailsInput,
   AdminPostsInput,
   AdminUsersInput,
+  parseAdminCreatetPostResult,
   parseAdminPostDetails,
   parseAdminPosts,
   parseAdminSubmitPost,
@@ -57,7 +59,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
   fastify.post("/api/admin/posts", async (request) => {
     assertAdminSecret(request);
     const post = parseAdminSubmitPost(request.body);
-    await db
+    const row: AdminCreatePostResultInput = await db
       .insertInto("posts")
       .values({
         author_id: post.authorId,
@@ -66,7 +68,10 @@ export default function adminApiRoute(fastify: FastifyInstance) {
         media_type: null,
         reactions: post.reactions,
       })
-      .execute();
+      .returning("id")
+      .executeTakeFirstOrThrow();
+
+    return parseAdminCreatetPostResult(row);
   });
 
   fastify.get<{
