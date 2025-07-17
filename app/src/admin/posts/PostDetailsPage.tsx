@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
-import { parseAdminPostDetails, type AdminSubmitPostInput } from "shared";
+import { parseAdminPostDetails } from "shared";
 import { useParseAdminSubmitPost } from "../hooks";
 import NumberInput from "../inputs/NumberInput";
 import TextAreaInput from "../inputs/TextAreaInput";
@@ -44,7 +44,7 @@ const MainPage: React.FC<MainPageProps> = ({
   const { post, setAuthorId, setTimestamp, setCaption, setReactions } =
     useParseAdminSubmitPost();
 
-  const updatePost = async (post: AdminSubmitPostInput) => {
+  const updatePost = async () => {
     setIsUpdating(true);
     try {
       const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
@@ -106,7 +106,7 @@ const MainPage: React.FC<MainPageProps> = ({
         className="admin-button"
         disabled={!postDetails || !post || isUpdating}
         onClick={() => {
-          if (post) void updatePost(post);
+          void updatePost();
         }}
       >
         {isUpdating ? "Updating Post..." : "Update Post"}

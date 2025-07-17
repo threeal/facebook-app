@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import { type AdminSubmitPostInput } from "shared";
 import { useParseAdminSubmitPost } from "../hooks";
 import NumberInput from "../inputs/NumberInput";
 import TextAreaInput from "../inputs/TextAreaInput";
@@ -20,7 +19,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   const { post, setAuthorId, setTimestamp, setCaption, setReactions } =
     useParseAdminSubmitPost();
 
-  const createPost = async (post: AdminSubmitPostInput) => {
+  const createPost = async () => {
     setIsCreating(true);
     try {
       const res = await fetch("/api/admin/posts", {
@@ -79,7 +78,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
         className="admin-button"
         disabled={isCreating || !post}
         onClick={() => {
-          if (post) void createPost(post);
+          void createPost();
         }}
       >
         {isCreating ? "Creating Post..." : "Create Post"}
