@@ -1,6 +1,6 @@
-import React, { useMemo, useState } from "react";
-import { parseAdminCreatePost, type AdminCreatePostInput } from "shared";
-import { useAdminUsers } from "../hooks";
+import React, { useState } from "react";
+import type { AdminCreatePostInput } from "shared";
+import { SubmitPostForm } from "./SubmitPostForm";
 
 export interface CreatePostPageProps {
   adminSecret: string;
@@ -12,29 +12,8 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   onBack,
 }) => {
   const [isCreating, setIsCreating] = useState(false);
-  const [authorId, setAuthorId] = useState(-1);
-  const [timestamp, setTimestamp] = useState(-1);
-  const [caption, setCaption] = useState("");
-  const [reactions, setReactions] = useState(0);
 
-  const users = useAdminUsers(adminSecret);
-  const sortedUsers = users.sort((a, b) => a.name.localeCompare(b.name));
-
-  const post = useMemo(() => {
-    try {
-      const input: AdminCreatePostInput = {
-        authorId,
-        timestamp,
-        caption,
-        reactions,
-      };
-      return parseAdminCreatePost(input);
-    } catch {
-      return null;
-    }
-  }, [authorId, timestamp, caption, reactions]);
-
-  const createPost = async () => {
+  const createPost = async (post: AdminCreatePostInput) => {
     setIsCreating(true);
     try {
       const res = await fetch("/api/admin/posts", {
@@ -60,61 +39,13 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
       <button className="admin-button" disabled={isCreating} onClick={onBack}>
         Back
       </button>
-      <select
-        className="admin-input"
-        defaultValue={-1}
+      <SubmitPostForm
+        adminSecret={adminSecret}
         disabled={isCreating}
-        onChange={(e) => {
-          setAuthorId(parseInt(e.target.value));
-        }}
-      >
-        <option value={-1} disabled hidden>
-          Select Author
-        </option>
-        {sortedUsers.map(({ id, name }) => (
-          <option key={id} value={id}>
-            {name}
-          </option>
-        ))}
-      </select>
-      <input
-        className="admin-input"
-        type="date"
-        disabled={isCreating}
-        onChange={(e) => {
-          if (e.target.valueAsDate) {
-            const milliseconds = e.target.valueAsDate.getTime();
-            setTimestamp(Math.floor(milliseconds / 1000));
-          } else {
-            setTimestamp(-1);
-          }
-        }}
-      />
-      <textarea
-        className="admin-input"
-        placeholder="Caption"
-        disabled={isCreating}
-        onChange={(e) => {
-          setCaption(e.target.value);
-        }}
-      ></textarea>
-      <input
-        className="admin-input"
-        type="number"
-        placeholder="Reactions"
-        inputMode="numeric"
-        disabled={isCreating}
-        onChange={(e) => {
-          setReactions(e.target.valueAsNumber);
-        }}
-      />
-      <button
-        className="admin-button"
-        disabled={isCreating || !post}
-        onClick={() => void createPost()}
+        onSubmit={(post) => void createPost(post)}
       >
         {isCreating ? "Creating Post..." : "Create Post"}
-      </button>
+      </SubmitPostForm>
     </>
   );
 };
