@@ -2,9 +2,9 @@ import { useQuery } from "@tanstack/react-query";
 import React, { useState } from "react";
 import { parseAdminPosts } from "shared";
 import CreatePostPage from "./CreatePostPage";
-import EditPostPage from "./EditPostPage";
+import PostDetailsPage from "./PostDetailsPage";
 
-type Page = "main" | "create" | "edit";
+type Page = "main" | "create" | number;
 
 interface PostCardsProps {
   adminSecret: string;
@@ -64,7 +64,6 @@ export interface PostsPageProps {
 
 const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
   const [page, setPage] = useState<Page>("main");
-  const [selectedId, setSelectedId] = useState(-1);
 
   switch (page) {
     case "main":
@@ -85,8 +84,7 @@ const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
           <PostCards
             adminSecret={adminSecret}
             onPostClick={(id) => {
-              setSelectedId(id);
-              setPage("edit");
+              setPage(id);
             }}
           />
         </>
@@ -102,10 +100,10 @@ const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
         />
       );
 
-    case "edit":
+    default:
       return (
-        <EditPostPage
-          id={selectedId}
+        <PostDetailsPage
+          id={page}
           adminSecret={adminSecret}
           onBack={() => {
             setPage("main");

@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 
+type Page = "main" | "confirm-delete";
+
 export interface ConfirmDeletePostPageProps {
   id: number;
   adminSecret: string;
@@ -48,44 +50,50 @@ const ConfirmDeletePostPage: React.FC<ConfirmDeletePostPageProps> = ({
   );
 };
 
-export interface EditPostPageProps {
+export interface PostDetailsPageProps {
   id: number;
   adminSecret: string;
   onBack: () => void;
 }
 
-const EditPostPage: React.FC<EditPostPageProps> = ({
+const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
   id,
   adminSecret,
   onBack,
 }) => {
-  const [isConfirmDelete, setIsConfirmDelete] = useState(false);
+  const [page, setPage] = useState<Page>("main");
 
-  return isConfirmDelete ? (
-    <ConfirmDeletePostPage
-      id={id}
-      adminSecret={adminSecret}
-      onCancel={() => {
-        setIsConfirmDelete(false);
-      }}
-      onDelete={onBack}
-    />
-  ) : (
-    <>
-      <h1 className="admin-title">Edit Post {id}</h1>
-      <button className="admin-button" onClick={onBack}>
-        Back
-      </button>
-      <button
-        className="admin-button"
-        onClick={() => {
-          setIsConfirmDelete(true);
-        }}
-      >
-        Delete Post
-      </button>
-    </>
-  );
+  switch (page) {
+    case "main":
+      return (
+        <>
+          <h1 className="admin-title">Post {id}</h1>
+          <button className="admin-button" onClick={onBack}>
+            Back
+          </button>
+          <button
+            className="admin-button"
+            onClick={() => {
+              setPage("confirm-delete");
+            }}
+          >
+            Delete Post
+          </button>
+        </>
+      );
+
+    case "confirm-delete":
+      return (
+        <ConfirmDeletePostPage
+          id={id}
+          adminSecret={adminSecret}
+          onCancel={() => {
+            setPage("main");
+          }}
+          onDelete={onBack}
+        />
+      );
+  }
 };
 
-export default EditPostPage;
+export default PostDetailsPage;
