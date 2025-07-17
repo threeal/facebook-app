@@ -1,7 +1,16 @@
 import { useQuery } from "@tanstack/react-query";
-import React, { useState } from "react";
-import { parseAdminPostDetails, type AdminSubmitPostInput } from "shared";
-import { SubmitPostForm } from "./SubmitPostForm";
+import React, { useMemo, useState } from "react";
+
+import {
+  parseAdminPostDetails,
+  parseAdminSubmitPost,
+  type AdminSubmitPostInput,
+} from "shared";
+
+import NumberInput from "../inputs/NumberInput";
+import TextAreaInput from "../inputs/TextAreaInput";
+import TimestampInput from "../inputs/TimestampInput";
+import UserSelectInput from "../inputs/UserSelectInput";
 
 type Page = "main" | "confirm-delete";
 
@@ -19,8 +28,12 @@ const MainPage: React.FC<MainPageProps> = ({
   onDelete,
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
+  const [authorId, setAuthorId] = useState(-1);
+  const [timestamp, setTimestamp] = useState(-1);
+  const [caption, setCaption] = useState("");
+  const [reactions, setReactions] = useState(0);
 
-  const { data: post } = useQuery({
+  const { data: postDetails } = useQuery({
     queryKey: ["admin/posts", id, adminSecret],
     queryFn: async () => {
       try {
@@ -36,6 +49,20 @@ const MainPage: React.FC<MainPageProps> = ({
     },
     initialData: null,
   });
+
+  const post = useMemo(() => {
+    try {
+      const input: AdminSubmitPostInput = {
+        authorId,
+        timestamp,
+        caption,
+        reactions,
+      };
+      return parseAdminSubmitPost(input);
+    } catch {
+      return null;
+    }
+  }, [authorId, timestamp, caption, reactions]);
 
   const updatePost = async (post: AdminSubmitPostInput) => {
     setIsUpdating(true);
@@ -62,20 +89,51 @@ const MainPage: React.FC<MainPageProps> = ({
       <button className="admin-button" disabled={isUpdating} onClick={onBack}>
         Back
       </button>
-      <SubmitPostForm
+      <UserSelectInput
         adminSecret={adminSecret}
-        initialAuthorId={post?.authorId}
-        initialTimestamp={post?.timestamp}
-        initialCaption={post?.caption}
-        initialReactions={post?.reactions}
-        disabled={!post || isUpdating}
-        onSubmit={(post) => void updatePost(post)}
-      >
-        {isUpdating ? "Updating Post..." : "Update Post"}
-      </SubmitPostForm>
+        label="Author"
+        disabled={!postDetails || isUpdating}
+        initialUserId={postDetails?.authorId}
+        onUserSelected={(userId) => {
+          setAuthorId(userId);
+        }}
+      />
+      <TimestampInput
+        label="Date"
+        disabled={!postDetails || isUpdating}
+        initialTimestamp={postDetails?.timestamp}
+        onTimestampChanged={(timestamp) => {
+          setTimestamp(timestamp);
+        }}
+      />
+      <TextAreaInput
+        label="Caption"
+        disabled={!postDetails || isUpdating}
+        initialText={postDetails?.caption}
+        onTextChanged={(text) => {
+          setCaption(text);
+        }}
+      />
+      <NumberInput
+        label="Reactions"
+        disabled={!postDetails || isUpdating}
+        initialValue={postDetails?.reactions}
+        onValueChanged={(value) => {
+          setReactions(value);
+        }}
+      />
       <button
         className="admin-button"
-        disabled={!post || isUpdating}
+        disabled={!postDetails || !post || isUpdating}
+        onClick={() => {
+          if (post) void updatePost(post);
+        }}
+      >
+        {isUpdating ? "Updating Post..." : "Update Post"}
+      </button>
+      <button
+        className="admin-button"
+        disabled={!postDetails || isUpdating}
         onClick={onDelete}
       >
         Delete Post

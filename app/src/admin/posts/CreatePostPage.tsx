@@ -1,6 +1,9 @@
-import React, { useState } from "react";
-import type { AdminSubmitPostInput } from "shared";
-import { SubmitPostForm } from "./SubmitPostForm";
+import React, { useMemo, useState } from "react";
+import { parseAdminSubmitPost, type AdminSubmitPostInput } from "shared";
+import NumberInput from "../inputs/NumberInput";
+import TextAreaInput from "../inputs/TextAreaInput";
+import TimestampInput from "../inputs/TimestampInput";
+import UserSelectInput from "../inputs/UserSelectInput";
 
 export interface CreatePostPageProps {
   adminSecret: string;
@@ -12,6 +15,24 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   onBack,
 }) => {
   const [isCreating, setIsCreating] = useState(false);
+  const [authorId, setAuthorId] = useState(-1);
+  const [timestamp, setTimestamp] = useState(-1);
+  const [caption, setCaption] = useState("");
+  const [reactions, setReactions] = useState(0);
+
+  const post = useMemo(() => {
+    try {
+      const input: AdminSubmitPostInput = {
+        authorId,
+        timestamp,
+        caption,
+        reactions,
+      };
+      return parseAdminSubmitPost(input);
+    } catch {
+      return null;
+    }
+  }, [authorId, timestamp, caption, reactions]);
 
   const createPost = async (post: AdminSubmitPostInput) => {
     setIsCreating(true);
@@ -39,13 +60,44 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
       <button className="admin-button" disabled={isCreating} onClick={onBack}>
         Back
       </button>
-      <SubmitPostForm
+      <UserSelectInput
         adminSecret={adminSecret}
+        label="Author"
         disabled={isCreating}
-        onSubmit={(post) => void createPost(post)}
+        onUserSelected={(userId) => {
+          setAuthorId(userId);
+        }}
+      />
+      <TimestampInput
+        label="Date"
+        disabled={isCreating}
+        onTimestampChanged={(timestamp) => {
+          setTimestamp(timestamp);
+        }}
+      />
+      <TextAreaInput
+        label="Caption"
+        disabled={isCreating}
+        onTextChanged={(text) => {
+          setCaption(text);
+        }}
+      />
+      <NumberInput
+        label="Reactions"
+        disabled={isCreating}
+        onValueChanged={(value) => {
+          setReactions(value);
+        }}
+      />
+      <button
+        className="admin-button"
+        disabled={isCreating || !post}
+        onClick={() => {
+          if (post) void createPost(post);
+        }}
       >
         {isCreating ? "Creating Post..." : "Create Post"}
-      </SubmitPostForm>
+      </button>
     </>
   );
 };
