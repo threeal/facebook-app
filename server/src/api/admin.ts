@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
+import { nanoid } from "nanoid";
 import { spawn } from "node:child_process";
 import { createWriteStream } from "node:fs";
 import { mkdir, rm } from "node:fs/promises";
@@ -71,6 +72,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     const row: AdminCreatePostResultInput = await db
       .insertInto("posts")
       .values({
+        id: nanoid(),
         author_id: post.authorId,
         timestamp: post.timestamp,
         caption: post.caption,
@@ -84,7 +86,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
   });
 
   fastify.get<{
-    Params: { id: number };
+    Params: { id: string };
   }>("/api/admin/posts/:id", async (request) => {
     assertAdminSecret(request);
     const { id } = request.params;
@@ -106,7 +108,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
   });
 
   fastify.put<{
-    Params: { id: number };
+    Params: { id: string };
   }>("/api/admin/posts/:id", async (request) => {
     assertAdminSecret(request);
     const { id } = request.params;
@@ -134,7 +136,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
       force: true,
     });
 
-    await db.deleteFrom("posts").where("id", "=", parseInt(id)).execute();
+    await db.deleteFrom("posts").where("id", "=", id).execute();
   });
 
   fastify.post<{
@@ -172,7 +174,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
       await db
         .updateTable("posts")
         .set({ media_type: "image" })
-        .where("id", "=", parseInt(id))
+        .where("id", "=", id)
         .execute();
     } else if (data.mimetype.startsWith("video/")) {
       const webmFile = `data/static/posts/medias/${id}/390.webm`;
@@ -192,7 +194,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
       await db
         .updateTable("posts")
         .set({ media_type: "video" })
-        .where("id", "=", parseInt(id))
+        .where("id", "=", id)
         .execute();
     } else {
       throw httpErrors.BadRequest();
@@ -213,7 +215,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     await db
       .updateTable("posts")
       .set({ media_type: null })
-      .where("id", "=", parseInt(id))
+      .where("id", "=", id)
       .execute();
   });
 }

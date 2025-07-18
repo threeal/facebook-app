@@ -6,10 +6,10 @@ import UnmuteIcon from "./icons/UnmuteIcon";
 import "./PostMedia.css";
 
 interface PostMediaVideoProps {
-  postId: number;
+  id: string;
 }
 
-const PostMediaVideo: React.FC<PostMediaVideoProps> = ({ postId }) => {
+const PostMediaVideo: React.FC<PostMediaVideoProps> = ({ id }) => {
   const videoRef = useRef<HTMLVideoElement>(null);
   const inViewRef = useRef<boolean>(false);
 
@@ -47,7 +47,7 @@ const PostMediaVideo: React.FC<PostMediaVideoProps> = ({ postId }) => {
       <PageVisibility onChange={onVisibilityChange} />
       <video
         ref={videoRef}
-        src={`/static/posts/medias/${postId.toString()}/390.webm`}
+        src={`/static/posts/medias/${id}/390.webm`}
         loop
         muted={isMuted}
         controls={false}
@@ -65,21 +65,21 @@ const PostMediaVideo: React.FC<PostMediaVideoProps> = ({ postId }) => {
 };
 
 export interface PostMediaProps {
-  postId: number;
+  id: string;
   mediaType: "image" | "video";
 }
 
-const PostMedia: React.FC<PostMediaProps> = ({ postId, mediaType }) => {
+const PostMedia: React.FC<PostMediaProps> = ({ id, mediaType }) => {
   switch (mediaType) {
     case "image":
       return (
         <div className="post-media-image">
-          <img src={`/static/posts/medias/${postId.toString()}/390.webp`} />
+          <img src={`/static/posts/medias/${id}/390.webp`} />
         </div>
       );
 
     case "video":
-      return <PostMediaVideo postId={postId} />;
+      return <PostMediaVideo id={id} />;
   }
 };
 

@@ -8,7 +8,7 @@ import {
 } from "shared";
 
 export function useParseAdminSubmitPost() {
-  const [authorId, setAuthorId] = useState(-1);
+  const [authorId, setAuthorId] = useState("");
   const [timestamp, setTimestamp] = useState(-1);
   const [caption, setCaption] = useState("");
   const [reactions, setReactions] = useState(0);

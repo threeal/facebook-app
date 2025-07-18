@@ -1,9 +1,15 @@
 import * as v from "valibot";
-import { integerToBoolean, positiveInteger, trimmedString } from "./types.js";
+
+import {
+  integerToBoolean,
+  nanoidString,
+  positiveInteger,
+  trimmedString,
+} from "./types.js";
 
 const adminUsersSchema = v.array(
   v.object({
-    id: positiveInteger,
+    id: nanoidString,
     name: trimmedString,
     hasAvatar: integerToBoolean,
   }),
@@ -17,7 +23,7 @@ export function parseAdminUsers(input: unknown) {
 
 const adminPostsSchema = v.array(
   v.object({
-    id: positiveInteger,
+    id: nanoidString,
     authorName: trimmedString,
     timestamp: positiveInteger,
     caption: trimmedString,
@@ -33,8 +39,8 @@ export function parseAdminPosts(input: unknown) {
 }
 
 const adminPostDetailsSchema = v.object({
-  id: positiveInteger,
-  authorId: positiveInteger,
+  id: nanoidString,
+  authorId: nanoidString,
   timestamp: positiveInteger,
   caption: trimmedString,
   mediaType: v.nullable(v.union([v.literal("video"), v.literal("image")])),
@@ -48,7 +54,7 @@ export function parseAdminPostDetails(input: unknown) {
 }
 
 const adminSubmitPostSchema = v.object({
-  authorId: positiveInteger,
+  authorId: nanoidString,
   timestamp: positiveInteger,
   caption: trimmedString,
   reactions: positiveInteger,
@@ -61,7 +67,7 @@ export function parseAdminSubmitPost(input: unknown) {
 }
 
 const adminCreatePostResultSchema = v.object({
-  id: positiveInteger,
+  id: nanoidString,
 });
 
 export type AdminCreatePostResultInput = v.InferInput<

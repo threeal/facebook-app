@@ -3,12 +3,11 @@ import React, { useState } from "react";
 import { parseAdminPosts } from "shared";
 import CreatePostPage from "./CreatePostPage";
 import PostDetailsPage from "./PostDetailsPage";
-
-type Page = "main" | "create" | number;
+import { shortenId } from "../utils";
 
 interface PostCardsProps {
   adminSecret: string;
-  onPostClick: (id: number) => void;
+  onPostClick: (id: string) => void;
 }
 
 const PostCards: React.FC<PostCardsProps> = ({ adminSecret, onPostClick }) => {
@@ -40,7 +39,7 @@ const PostCards: React.FC<PostCardsProps> = ({ adminSecret, onPostClick }) => {
             onPostClick(post.id);
           }}
         >
-          ID: {post.id}
+          ID: {shortenId(post.id)}
           <br />
           Author: {post.authorName}
           <br />
@@ -63,7 +62,7 @@ export interface PostsPageProps {
 }
 
 const PostsPage: React.FC<PostsPageProps> = ({ adminSecret, onBack }) => {
-  const [page, setPage] = useState<Page>("main");
+  const [page, setPage] = useState("main");
 
   switch (page) {
     case "main":

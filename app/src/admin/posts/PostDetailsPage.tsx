@@ -8,11 +8,12 @@ import NumberInput from "../inputs/NumberInput";
 import TextAreaInput from "../inputs/TextAreaInput";
 import TimestampInput from "../inputs/TimestampInput";
 import UserSelectInput from "../inputs/UserSelectInput";
+import { shortenId } from "../utils";
 
 type Page = "main" | "confirm-delete" | "create-media" | "confirm-media-delete";
 
 interface MediaFormProps {
-  id: number;
+  id: string;
   mediaType: "image" | "video" | null;
   onCreate: () => void;
   onDelete: () => void;
@@ -30,7 +31,7 @@ const MediaForm: React.FC<MediaFormProps> = ({
         <>
           <label className="admin-input-label">Media</label>
           <div className="admin-media">
-            <img src={`/static/posts/medias/${id.toFixed()}/390.webp`} />
+            <img src={`/static/posts/medias/${id}/390.webp`} />
           </div>
           <button className="admin-button" onClick={onDelete}>
             Delete Post Media
@@ -44,7 +45,7 @@ const MediaForm: React.FC<MediaFormProps> = ({
           <label className="admin-input-label">Media</label>
           <div className="admin-media">
             <video
-              src={`/static/posts/medias/${id.toString()}/390.webm`}
+              src={`/static/posts/medias/${id}/390.webm`}
               controls={true}
             />
           </div>
@@ -66,7 +67,7 @@ const MediaForm: React.FC<MediaFormProps> = ({
 };
 
 interface UpdatePostFormProps {
-  id: number;
+  id: string;
   adminSecret: string;
   onCreateMedia: () => void;
   onDeleteMedia: () => void;
@@ -82,7 +83,7 @@ const UpdatePostForm: React.FC<UpdatePostFormProps> = ({
     queryKey: ["admin/posts", id, adminSecret],
     queryFn: async () => {
       try {
-        const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
+        const res = await fetch(`/api/admin/posts/${id}`, {
           headers: { "admin-secret": adminSecret },
         });
         if (!res.ok) throw new Error(res.statusText);
@@ -139,7 +140,7 @@ const UpdatePostForm: React.FC<UpdatePostFormProps> = ({
         errorLabel="Failed to Update Post"
         disabled={!postDetails || !post}
         onAction={async () => {
-          const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
+          const res = await fetch(`/api/admin/posts/${id}`, {
             method: "PUT",
             headers: {
               "admin-secret": adminSecret,
@@ -163,7 +164,7 @@ const UpdatePostForm: React.FC<UpdatePostFormProps> = ({
 };
 
 interface CreatePostMediaFormProps {
-  id: number;
+  id: string;
   adminSecret: string;
   onCreated: () => void;
 }
@@ -194,7 +195,7 @@ const CreatePostMediaForm: React.FC<CreatePostMediaFormProps> = ({
             const formData = new FormData();
             formData.append("file", mediaFile);
 
-            const res = await fetch(`/api/admin/posts/${id.toFixed()}/media`, {
+            const res = await fetch(`/api/admin/posts/${id}/media`, {
               method: "POST",
               headers: { "admin-secret": adminSecret },
               body: formData,
@@ -210,7 +211,7 @@ const CreatePostMediaForm: React.FC<CreatePostMediaFormProps> = ({
 };
 
 export interface PostDetailsPageProps {
-  id: number;
+  id: string;
   adminSecret: string;
   onBack: () => void;
 }
@@ -226,7 +227,7 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
     case "main":
       return (
         <>
-          <h1 className="admin-title">Post {id}</h1>
+          <h1 className="admin-title">Post {shortenId(id)}</h1>
           <button className="admin-button" onClick={onBack}>
             Back
           </button>
@@ -254,13 +255,13 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
     case "confirm-delete":
       return (
         <>
-          <h1 className="admin-title">Confirm Delete Post {id}</h1>
+          <h1 className="admin-title">Confirm Delete Post {shortenId(id)}</h1>
           <ActionButton
             label="Delete Post"
             processingLabel="Deleting Post..."
             errorLabel="Failed to Delete Post"
             onAction={async () => {
-              const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
+              const res = await fetch(`/api/admin/posts/${id}`, {
                 method: "DELETE",
                 headers: { "admin-secret": adminSecret },
               });
@@ -282,7 +283,7 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
     case "create-media":
       return (
         <>
-          <h1 className="admin-title">Create Post {id} Media</h1>
+          <h1 className="admin-title">Create Post {shortenId(id)} Media</h1>
           <button
             className="admin-button"
             onClick={() => {
@@ -304,19 +305,18 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
     case "confirm-media-delete":
       return (
         <>
-          <h1 className="admin-title">Confirm Delete Post {id} Media</h1>
+          <h1 className="admin-title">
+            Confirm Delete Post {shortenId(id)} Media
+          </h1>
           <ActionButton
             label="Delete Post Media"
             processingLabel="Deleting Post Media..."
             errorLabel="Failed to Delete Post Media"
             onAction={async () => {
-              const res = await fetch(
-                `/api/admin/posts/${id.toFixed()}/media`,
-                {
-                  method: "DELETE",
-                  headers: { "admin-secret": adminSecret },
-                },
-              );
+              const res = await fetch(`/api/admin/posts/${id}/media`, {
+                method: "DELETE",
+                headers: { "admin-secret": adminSecret },
+              });
               if (!res.ok) throw new Error(res.statusText);
               setPage("main");
             }}

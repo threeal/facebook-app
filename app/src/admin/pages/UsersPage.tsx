@@ -1,5 +1,6 @@
 import React from "react";
 import { useAdminUsers } from "../hooks";
+import { shortenId } from "../utils";
 
 export interface UsersPageProps {
   adminSecret: string;
@@ -17,7 +18,7 @@ const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
       </button>
       {users.map(({ id, name, hasAvatar }) => (
         <div key={id} className="admin-card">
-          ID: {id}
+          ID: {shortenId(id)}
           <br />
           Name: {name}
           <br />

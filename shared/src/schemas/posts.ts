@@ -1,9 +1,15 @@
 import * as v from "valibot";
-import { integerToBoolean, positiveInteger, trimmedString } from "./types.js";
+
+import {
+  integerToBoolean,
+  nanoidString,
+  positiveInteger,
+  trimmedString,
+} from "./types.js";
 
 const postSchema = v.object({
-  id: positiveInteger,
-  authorId: positiveInteger,
+  id: nanoidString,
+  authorId: nanoidString,
   authorName: trimmedString,
   authorHasAvatar: integerToBoolean,
   timestamp: positiveInteger,
