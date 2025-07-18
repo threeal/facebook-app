@@ -3,24 +3,32 @@ import React, { useState } from "react";
 import { parseAdminPostDetails } from "shared";
 import { useParseAdminSubmitPost } from "../hooks";
 import ActionButton from "../inputs/ActionButton";
+import FileInput from "../inputs/FileInput";
 import NumberInput from "../inputs/NumberInput";
 import TextAreaInput from "../inputs/TextAreaInput";
 import TimestampInput from "../inputs/TimestampInput";
 import UserSelectInput from "../inputs/UserSelectInput";
 
-type Page = "main" | "confirm-delete" | "confirm-media-delete";
+type Page = "main" | "confirm-delete" | "create-media" | "confirm-media-delete";
 
 interface MediaFormProps {
   id: number;
   mediaType: "image" | "video" | null;
+  onCreate: () => void;
   onDelete: () => void;
 }
 
-const MediaForm: React.FC<MediaFormProps> = ({ id, mediaType, onDelete }) => {
+const MediaForm: React.FC<MediaFormProps> = ({
+  id,
+  mediaType,
+  onCreate,
+  onDelete,
+}) => {
   switch (mediaType) {
     case "image":
       return (
         <>
+          <label className="admin-input-label">Media</label>
           <div className="admin-media">
             <img src={`/static/posts/medias/${id.toFixed()}/390.webp`} />
           </div>
@@ -33,6 +41,7 @@ const MediaForm: React.FC<MediaFormProps> = ({ id, mediaType, onDelete }) => {
     case "video":
       return (
         <>
+          <label className="admin-input-label">Media</label>
           <div className="admin-media">
             <video
               src={`/static/posts/medias/${id.toString()}/390.webm`}
@@ -44,20 +53,29 @@ const MediaForm: React.FC<MediaFormProps> = ({ id, mediaType, onDelete }) => {
           </button>
         </>
       );
-  }
 
-  return null;
+    default:
+      return (
+        <>
+          <button className="admin-button" onClick={onCreate}>
+            Create Post Media
+          </button>
+        </>
+      );
+  }
 };
 
 interface UpdatePostFormProps {
   id: number;
   adminSecret: string;
+  onCreateMedia: () => void;
   onDeleteMedia: () => void;
 }
 
 const UpdatePostForm: React.FC<UpdatePostFormProps> = ({
   id,
   adminSecret,
+  onCreateMedia,
   onDeleteMedia,
 }) => {
   const { data: postDetails } = useQuery({
@@ -136,9 +154,57 @@ const UpdatePostForm: React.FC<UpdatePostFormProps> = ({
         <MediaForm
           id={postDetails.id}
           mediaType={postDetails.mediaType}
+          onCreate={onCreateMedia}
           onDelete={onDeleteMedia}
         />
       )}
+    </>
+  );
+};
+
+interface CreatePostMediaFormProps {
+  id: number;
+  adminSecret: string;
+  onCreated: () => void;
+}
+
+const CreatePostMediaForm: React.FC<CreatePostMediaFormProps> = ({
+  id,
+  adminSecret,
+  onCreated,
+}) => {
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+
+  return (
+    <>
+      <FileInput
+        label="Media"
+        accept="image/*,video/*"
+        onFileChanged={(file) => {
+          setMediaFile(file);
+        }}
+      />
+      <ActionButton
+        label="Create Post Media"
+        processingLabel="Deleting Post Media..."
+        errorLabel="Failed to Delete Post Media"
+        disabled={!mediaFile}
+        onAction={async () => {
+          if (mediaFile) {
+            const formData = new FormData();
+            formData.append("file", mediaFile);
+
+            const res = await fetch(`/api/admin/posts/${id.toFixed()}/media`, {
+              method: "POST",
+              headers: { "admin-secret": adminSecret },
+              body: formData,
+            });
+            if (!res.ok) throw new Error(res.statusText);
+
+            onCreated();
+          }
+        }}
+      />
     </>
   );
 };
@@ -167,6 +233,9 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
           <UpdatePostForm
             id={id}
             adminSecret={adminSecret}
+            onCreateMedia={() => {
+              setPage("create-media");
+            }}
             onDeleteMedia={() => {
               setPage("confirm-media-delete");
             }}
@@ -207,6 +276,28 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
           >
             Cancel
           </button>
+        </>
+      );
+
+    case "create-media":
+      return (
+        <>
+          <h1 className="admin-title">Create Post {id} Media</h1>
+          <button
+            className="admin-button"
+            onClick={() => {
+              setPage("main");
+            }}
+          >
+            Back
+          </button>
+          <CreatePostMediaForm
+            id={id}
+            adminSecret={adminSecret}
+            onCreated={() => {
+              setPage("main");
+            }}
+          />
         </>
       );
 
