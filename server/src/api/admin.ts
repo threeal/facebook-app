@@ -21,7 +21,7 @@ import {
 } from "shared";
 
 import { db } from "../db.js";
-import { waitProcess } from "../utils.js";
+import { waitProcess } from "../utils/process.js";
 
 const pump = promisify(pipeline);
 
