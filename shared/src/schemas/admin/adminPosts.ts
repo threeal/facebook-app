@@ -1,5 +1,11 @@
 import * as v from "valibot";
-import { nanoidString, positiveInteger, trimmedString } from "../types.js";
+
+import {
+  mediaType,
+  nanoidString,
+  positiveInteger,
+  trimmedString,
+} from "../types.js";
 
 const adminPostsSchema = v.array(
   v.object({
@@ -7,7 +13,7 @@ const adminPostsSchema = v.array(
     authorName: trimmedString,
     timestamp: positiveInteger,
     caption: trimmedString,
-    mediaType: v.nullable(v.union([v.literal("video"), v.literal("image")])),
+    mediaType: mediaType,
     reactions: positiveInteger,
   }),
 );

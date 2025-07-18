@@ -13,3 +13,7 @@ export const integerToBoolean = v.union([
     v.transform((val) => val !== 0),
   ),
 ]);
+
+export const mediaType = v.nullable(
+  v.union([v.literal("video"), v.literal("image")]),
+);
