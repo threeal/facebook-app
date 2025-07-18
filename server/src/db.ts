@@ -3,13 +3,13 @@ import { Generated, Kysely, SqliteDialect } from "kysely";
 
 interface Database {
   users: {
-    id: Generated<number>;
+    id: string;
     name: string;
     has_avatar: Generated<number>;
   };
   posts: {
-    id: Generated<number>;
-    author_id: number;
+    id: string;
+    author_id: string;
     timestamp: number;
     caption: Generated<string>;
     media_type: "image" | "video" | null;

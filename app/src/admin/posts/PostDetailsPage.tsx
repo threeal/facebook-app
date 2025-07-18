@@ -12,7 +12,7 @@ import UserSelectInput from "../inputs/UserSelectInput";
 type Page = "main" | "confirm-delete" | "create-media" | "confirm-media-delete";
 
 interface MediaFormProps {
-  id: number;
+  id: string;
   mediaType: "image" | "video" | null;
   onCreate: () => void;
   onDelete: () => void;
@@ -30,7 +30,7 @@ const MediaForm: React.FC<MediaFormProps> = ({
         <>
           <label className="admin-input-label">Media</label>
           <div className="admin-media">
-            <img src={`/static/posts/medias/${id.toFixed()}/390.webp`} />
+            <img src={`/static/posts/medias/${id}/390.webp`} />
           </div>
           <button className="admin-button" onClick={onDelete}>
             Delete Post Media
@@ -44,7 +44,7 @@ const MediaForm: React.FC<MediaFormProps> = ({
           <label className="admin-input-label">Media</label>
           <div className="admin-media">
             <video
-              src={`/static/posts/medias/${id.toString()}/390.webm`}
+              src={`/static/posts/medias/${id}/390.webm`}
               controls={true}
             />
           </div>
@@ -66,7 +66,7 @@ const MediaForm: React.FC<MediaFormProps> = ({
 };
 
 interface UpdatePostFormProps {
-  id: number;
+  id: string;
   adminSecret: string;
   onCreateMedia: () => void;
   onDeleteMedia: () => void;
@@ -82,7 +82,7 @@ const UpdatePostForm: React.FC<UpdatePostFormProps> = ({
     queryKey: ["admin/posts", id, adminSecret],
     queryFn: async () => {
       try {
-        const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
+        const res = await fetch(`/api/admin/posts/${id}`, {
           headers: { "admin-secret": adminSecret },
         });
         if (!res.ok) throw new Error(res.statusText);
@@ -139,7 +139,7 @@ const UpdatePostForm: React.FC<UpdatePostFormProps> = ({
         errorLabel="Failed to Update Post"
         disabled={!postDetails || !post}
         onAction={async () => {
-          const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
+          const res = await fetch(`/api/admin/posts/${id}`, {
             method: "PUT",
             headers: {
               "admin-secret": adminSecret,
@@ -163,7 +163,7 @@ const UpdatePostForm: React.FC<UpdatePostFormProps> = ({
 };
 
 interface CreatePostMediaFormProps {
-  id: number;
+  id: string;
   adminSecret: string;
   onCreated: () => void;
 }
@@ -194,7 +194,7 @@ const CreatePostMediaForm: React.FC<CreatePostMediaFormProps> = ({
             const formData = new FormData();
             formData.append("file", mediaFile);
 
-            const res = await fetch(`/api/admin/posts/${id.toFixed()}/media`, {
+            const res = await fetch(`/api/admin/posts/${id}/media`, {
               method: "POST",
               headers: { "admin-secret": adminSecret },
               body: formData,
@@ -210,7 +210,7 @@ const CreatePostMediaForm: React.FC<CreatePostMediaFormProps> = ({
 };
 
 export interface PostDetailsPageProps {
-  id: number;
+  id: string;
   adminSecret: string;
   onBack: () => void;
 }
@@ -260,7 +260,7 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
             processingLabel="Deleting Post..."
             errorLabel="Failed to Delete Post"
             onAction={async () => {
-              const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
+              const res = await fetch(`/api/admin/posts/${id}`, {
                 method: "DELETE",
                 headers: { "admin-secret": adminSecret },
               });
@@ -310,13 +310,10 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
             processingLabel="Deleting Post Media..."
             errorLabel="Failed to Delete Post Media"
             onAction={async () => {
-              const res = await fetch(
-                `/api/admin/posts/${id.toFixed()}/media`,
-                {
-                  method: "DELETE",
-                  headers: { "admin-secret": adminSecret },
-                },
-              );
+              const res = await fetch(`/api/admin/posts/${id}/media`, {
+                method: "DELETE",
+                headers: { "admin-secret": adminSecret },
+              });
               if (!res.ok) throw new Error(res.statusText);
               setPage("main");
             }}

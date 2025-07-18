@@ -61,7 +61,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
             <img
               src={
                 post.authorHasAvatar
-                  ? `/static/users/avatars/${post.authorId.toString()}/40x40.webp`
+                  ? `/static/users/avatars/${post.authorId}/40x40.webp`
                   : defaultAvatar
               }
             />
@@ -94,9 +94,7 @@ const Post: React.FC<PostProps> = ({ post }) => {
           {post.caption}
         </div>
       )}
-      {post.mediaType && (
-        <PostMedia postId={post.id} mediaType={post.mediaType} />
-      )}
+      {post.mediaType && <PostMedia id={post.id} mediaType={post.mediaType} />}
       <div className="post-footer">
         {reactions > 0 && (
           <div className="post-interactions">

@@ -5,8 +5,8 @@ export interface UserSelectInputProps {
   adminSecret: string;
   label: string;
   disabled?: boolean;
-  initialUserId?: number;
-  onUserSelected: (userId: number) => void;
+  initialUserId?: string;
+  onUserSelected: (userId: string) => void;
 }
 
 export const UserSelectInput: React.FC<UserSelectInputProps> = ({
@@ -24,9 +24,9 @@ export const UserSelectInput: React.FC<UserSelectInputProps> = ({
   useEffect(() => {
     if (selectRef.current) {
       if (initialUserId !== undefined) {
-        selectRef.current.value = initialUserId.toFixed();
+        selectRef.current.value = initialUserId;
       }
-      onUserSelected(parseInt(selectRef.current.value));
+      onUserSelected(selectRef.current.value);
     }
   }, [initialUserId, selectRef]);
 
@@ -36,13 +36,13 @@ export const UserSelectInput: React.FC<UserSelectInputProps> = ({
       <select
         className="admin-input"
         ref={selectRef}
-        defaultValue={-1}
+        defaultValue={""}
         disabled={disabled}
         onChange={(e) => {
-          onUserSelected(parseInt(e.target.value));
+          onUserSelected(e.target.value);
         }}
       >
-        <option value={-1} disabled hidden>
+        <option value={""} disabled hidden>
           Select User
         </option>
         {sortedUsers.map(({ id, name }) => (

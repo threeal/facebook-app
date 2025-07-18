@@ -1,5 +1,6 @@
 import * as v from "valibot";
 
+export const nanoidString = v.pipe(v.string(), v.nanoid());
 export const trimmedString = v.pipe(v.string(), v.trim());
 
 export const integer = v.pipe(v.number(), v.finite(), v.integer());

@@ -81,7 +81,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
             const formData = new FormData();
             formData.append("file", mediaFile);
 
-            const res = await fetch(`/api/admin/posts/${id.toFixed()}/media`, {
+            const res = await fetch(`/api/admin/posts/${id}/media`, {
               method: "POST",
               headers: { "admin-secret": adminSecret },
               body: formData,
