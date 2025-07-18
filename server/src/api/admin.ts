@@ -2,7 +2,7 @@ import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
 import { spawn } from "node:child_process";
 import { createWriteStream } from "node:fs";
-import { mkdir } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 import { pipeline } from "node:stream";
 import { promisify } from "node:util";
@@ -167,6 +167,24 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     await db
       .updateTable("posts")
       .set({ media_type: "image" })
+      .where("id", "=", parseInt(id))
+      .execute();
+  });
+
+  fastify.delete<{
+    Params: { id: string };
+  }>("/api/admin/posts/:id/media", async (request) => {
+    assertAdminSecret(request);
+    const { id } = request.params;
+
+    await rm(`data/static/posts/medias/${id}`, {
+      recursive: true,
+      force: true,
+    });
+
+    await db
+      .updateTable("posts")
+      .set({ media_type: null })
       .where("id", "=", parseInt(id))
       .execute();
   });
