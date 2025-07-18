@@ -72,3 +72,14 @@ textarea.admin-input:disabled {
   color: black;
   font-size: 12px;
 }
+
+.admin-image-container {
+  margin: 0 4px;
+}
+
+.admin-image-container img {
+  display: block;
+  border-radius: 8px;
+  width: 100%;
+  object-fit: cover;
+}
