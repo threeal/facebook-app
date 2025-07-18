@@ -1,4 +1,4 @@
-import { FastifyInstance, FastifyRequest } from "fastify";
+import { FastifyInstance } from "fastify";
 import httpErrors from "http-errors";
 import { nanoid } from "nanoid";
 import { spawn } from "node:child_process";
@@ -21,18 +21,12 @@ import {
 } from "shared";
 
 import { db } from "../db.js";
+import { assertAdminSecret } from "../utils/admin.js";
 import { waitProcess } from "../utils/process.js";
 
 const pump = promisify(pipeline);
 
 export default function adminApiRoute(fastify: FastifyInstance) {
-  const assertAdminSecret = (request: FastifyRequest) => {
-    const adminSecret = request.headers["admin-secret"];
-    if (adminSecret !== process.env.ADMIN_SECRET) {
-      throw httpErrors.Unauthorized();
-    }
-  };
-
   fastify.post("/api/admin/verify", (request): null => {
     assertAdminSecret(request);
     return null;
