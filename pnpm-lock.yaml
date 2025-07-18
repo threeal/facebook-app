@@ -20,6 +20,9 @@ importers:
       '@tanstack/react-query':
         specifier: ^5.83.0
         version: 5.83.0(react@19.1.0)
+      catched-error-message:
+        specifier: ^0.0.1
+        version: 0.0.1
       react:
         specifier: ^19.1.0
         version: 19.1.0
@@ -1016,6 +1019,9 @@ packages:
 
   caniuse-lite@1.0.30001724:
     resolution: {integrity: sha512-WqJo7p0TbHDOythNTqYujmaJTvtYRZrjpP8TCvH6Vb9CYJerJNKamKzIWOM4BkQatWj9H2lYulpdAQNBe7QhNA==}
+
+  catched-error-message@0.0.1:
+    resolution: {integrity: sha512-Nml8YxCdXMIdACzCasyG3GmQZob15IjQNMWPAEyqQLsyrQYBLaYq8cZWccMdpodnAsGu48E0DQxoUpR6hWVFZg==}
 
   chai@5.2.0:
     resolution: {integrity: sha512-mCuXncKXk5iCLhfhwTc0izo0gtEmpz5CtG2y8GiOINBlMVS6v8TMRc5TaLWKS6692m9+dVVfzgeVxR5UxWHTYw==}
@@ -3386,6 +3392,8 @@ snapshots:
   callsites@3.1.0: {}
 
   caniuse-lite@1.0.30001724: {}
+
+  catched-error-message@0.0.1: {}
 
   chai@5.2.0:
     dependencies:
