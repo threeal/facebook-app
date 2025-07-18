@@ -1,4 +1,5 @@
 import { useQuery } from "@tanstack/react-query";
+import { getErrorMessage } from "catched-error-message";
 import React, { useState } from "react";
 import { parseAdminPostDetails } from "shared";
 import { useParseAdminSubmitPost } from "../hooks";
@@ -23,6 +24,7 @@ const MainPage: React.FC<MainPageProps> = ({
   onDelete,
 }) => {
   const [isUpdating, setIsUpdating] = useState(false);
+  const [error, setError] = useState<unknown>(null);
 
   const { data: postDetails } = useQuery({
     queryKey: ["admin/posts", id, adminSecret],
@@ -46,6 +48,7 @@ const MainPage: React.FC<MainPageProps> = ({
 
   const updatePost = async () => {
     setIsUpdating(true);
+    setError(null);
     try {
       const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
         method: "PUT",
@@ -58,6 +61,7 @@ const MainPage: React.FC<MainPageProps> = ({
       if (!res.ok) throw new Error(res.statusText);
     } catch (err) {
       console.error("Failed to update post:", err);
+      setError(err);
     } finally {
       setIsUpdating(false);
     }
@@ -109,8 +113,17 @@ const MainPage: React.FC<MainPageProps> = ({
           void updatePost();
         }}
       >
-        {isUpdating ? "Updating Post..." : "Update Post"}
+        {isUpdating
+          ? "Updating Post..."
+          : error
+            ? "Failed to Update Post"
+            : "Update Post"}
       </button>
+      {error && (
+        <label className="admin-input-label">
+          Error: {getErrorMessage(error)}
+        </label>
+      )}
       <button
         className="admin-button"
         disabled={!postDetails || isUpdating}
@@ -136,9 +149,11 @@ const ConfirmDeletePage: React.FC<ConfirmDeletePageProps> = ({
   onDelete,
 }) => {
   const [isDeleting, setIsDeleting] = useState(false);
+  const [error, setError] = useState<unknown>(null);
 
   const deletePost = async () => {
     setIsDeleting(true);
+    setError(null);
     try {
       const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
         method: "DELETE",
@@ -148,6 +163,7 @@ const ConfirmDeletePage: React.FC<ConfirmDeletePageProps> = ({
       onDelete();
     } catch (err) {
       console.error(`Failed to delete post ${id.toString()}:`, err);
+      setError(err);
     } finally {
       setIsDeleting(false);
     }
@@ -161,8 +177,17 @@ const ConfirmDeletePage: React.FC<ConfirmDeletePageProps> = ({
         disabled={isDeleting}
         onClick={() => void deletePost()}
       >
-        {isDeleting ? "Deleting Post..." : "Delete Post"}
+        {isDeleting
+          ? "Deleting Post..."
+          : error
+            ? "Failed to Delete Post"
+            : "Delete Post"}
       </button>
+      {error && (
+        <label className="admin-input-label">
+          Error: {getErrorMessage(error)}
+        </label>
+      )}
       <button className="admin-button" disabled={isDeleting} onClick={onCancel}>
         Cancel
       </button>

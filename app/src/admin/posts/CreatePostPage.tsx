@@ -1,3 +1,4 @@
+import { getErrorMessage } from "catched-error-message";
 import React, { useState } from "react";
 import { parseAdminCreatetPostResult } from "shared";
 import { useParseAdminSubmitPost } from "../hooks";
@@ -17,6 +18,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   onBack,
 }) => {
   const [isCreating, setIsCreating] = useState(false);
+  const [error, setError] = useState<unknown>(null);
 
   const { post, setAuthorId, setTimestamp, setCaption, setReactions } =
     useParseAdminSubmitPost();
@@ -25,6 +27,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
 
   const createPost = async () => {
     setIsCreating(true);
+    setError(null);
     try {
       const res = await fetch("/api/admin/posts", {
         method: "POST",
@@ -52,6 +55,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
       onBack();
     } catch (err) {
       console.error("Failed to create post:", err);
+      setError(err);
     } finally {
       setIsCreating(false);
     }
@@ -107,8 +111,17 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
           void createPost();
         }}
       >
-        {isCreating ? "Creating Post..." : "Create Post"}
+        {isCreating
+          ? "Creating Post..."
+          : error
+            ? "Failed to Create Post"
+            : "Create Post"}
       </button>
+      {error && (
+        <label className="admin-input-label">
+          Error: {getErrorMessage(error)}
+        </label>
+      )}
     </>
   );
 };
