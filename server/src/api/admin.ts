@@ -144,9 +144,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     const { id } = request.params;
 
     const data = await request.file();
-    if (!data?.mimetype.startsWith("image/")) {
-      throw httpErrors.BadRequest();
-    }
+    if (!data) throw httpErrors.BadRequest();
 
     const ext = path.extname(data.filename);
     const oriFile = `data/static/posts/medias/${id}/original.${ext}`;
@@ -154,28 +152,51 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     await mkdir(path.dirname(oriFile));
     await pump(data.file, createWriteStream(oriFile));
 
-    const webpFile = `data/static/posts/medias/${id}/390.webp`;
-    const magick = spawn("magick", [
-      oriFile,
-      "-auto-orient",
-      "-resize",
-      "1170x",
-      "-filter",
-      "Lanczos",
-      "-define",
-      "filter:blur=0.8",
-      "-sharpen",
-      "0x0.8",
-      webpFile,
-    ]);
+    if (data.mimetype.startsWith("image/")) {
+      const webpFile = `data/static/posts/medias/${id}/390.webp`;
+      const magick = spawn("magick", [
+        oriFile,
+        "-auto-orient",
+        "-resize",
+        "1170x",
+        "-filter",
+        "Lanczos",
+        "-define",
+        "filter:blur=0.8",
+        "-sharpen",
+        "0x0.8",
+        webpFile,
+      ]);
+      await waitProcess(magick);
 
-    await waitProcess(magick);
+      await db
+        .updateTable("posts")
+        .set({ media_type: "image" })
+        .where("id", "=", parseInt(id))
+        .execute();
+    } else if (data.mimetype.startsWith("video/")) {
+      const webmFile = `data/static/posts/medias/${id}/390.webm`;
+      const ffmpeg = spawn("ffmpeg", [
+        "-i",
+        oriFile,
+        "-c:v",
+        "libvpx",
+        "-b:v",
+        "1M",
+        "-c:a",
+        "libvorbis",
+        webmFile,
+      ]);
+      await waitProcess(ffmpeg);
 
-    await db
-      .updateTable("posts")
-      .set({ media_type: "image" })
-      .where("id", "=", parseInt(id))
-      .execute();
+      await db
+        .updateTable("posts")
+        .set({ media_type: "video" })
+        .where("id", "=", parseInt(id))
+        .execute();
+    } else {
+      throw httpErrors.BadRequest();
+    }
   });
 
   fastify.delete<{
