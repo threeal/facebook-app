@@ -3,8 +3,10 @@ import { useMemo, useState } from "react";
 
 import {
   parseAdminSubmitPost,
+  parseAdminSubmitUser,
   parseAdminUsers,
   type AdminSubmitPostInput,
+  type AdminSubmitUserInput,
 } from "shared";
 
 export function useParseAdminSubmitPost() {
@@ -28,6 +30,21 @@ export function useParseAdminSubmitPost() {
   }, [authorId, timestamp, caption, reactions]);
 
   return { post, setAuthorId, setTimestamp, setCaption, setReactions };
+}
+
+export function useParseAdminSubmitUser() {
+  const [name, setName] = useState("");
+
+  const user = useMemo(() => {
+    try {
+      const input: AdminSubmitUserInput = { name };
+      return parseAdminSubmitUser(input);
+    } catch {
+      return null;
+    }
+  }, [name]);
+
+  return { user, setName };
 }
 
 export function useAdminUsers(adminSecret: string) {
