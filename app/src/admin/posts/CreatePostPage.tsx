@@ -1,6 +1,7 @@
 import React, { useState } from "react";
-import { type AdminSubmitPostInput } from "shared";
+import { parseAdminCreatetPostResult } from "shared";
 import { useParseAdminSubmitPost } from "../hooks";
+import FileInput from "../inputs/FileInput";
 import NumberInput from "../inputs/NumberInput";
 import TextAreaInput from "../inputs/TextAreaInput";
 import TimestampInput from "../inputs/TimestampInput";
@@ -20,7 +21,9 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   const { post, setAuthorId, setTimestamp, setCaption, setReactions } =
     useParseAdminSubmitPost();
 
-  const createPost = async (post: AdminSubmitPostInput) => {
+  const [mediaFile, setMediaFile] = useState<File | null>(null);
+
+  const createPost = async () => {
     setIsCreating(true);
     try {
       const res = await fetch("/api/admin/posts", {
@@ -32,6 +35,20 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
         body: JSON.stringify(post),
       });
       if (!res.ok) throw new Error(res.statusText);
+      const { id } = parseAdminCreatetPostResult(await res.json());
+
+      if (mediaFile) {
+        const formData = new FormData();
+        formData.append("file", mediaFile);
+
+        const res = await fetch(`/api/admin/posts/${id.toFixed()}/media`, {
+          method: "POST",
+          headers: { "admin-secret": adminSecret },
+          body: formData,
+        });
+        if (!res.ok) throw new Error(res.statusText);
+      }
+
       onBack();
     } catch (err) {
       console.error("Failed to create post:", err);
@@ -75,11 +92,19 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
           setReactions(value);
         }}
       />
+      <FileInput
+        label="Media"
+        accept="image/webp"
+        disabled={isCreating}
+        onFileChanged={(file) => {
+          setMediaFile(file);
+        }}
+      />
       <button
         className="admin-button"
         disabled={isCreating || !post}
         onClick={() => {
-          if (post) void createPost(post);
+          void createPost();
         }}
       >
         {isCreating ? "Creating Post..." : "Create Post"}

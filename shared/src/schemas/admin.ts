@@ -59,3 +59,15 @@ export type AdminSubmitPostInput = v.InferInput<typeof adminSubmitPostSchema>;
 export function parseAdminSubmitPost(input: unknown) {
   return v.parse(adminSubmitPostSchema, input);
 }
+
+const adminCreatePostResultSchema = v.object({
+  id: positiveInteger,
+});
+
+export type AdminCreatePostResultInput = v.InferInput<
+  typeof adminCreatePostResultSchema
+>;
+
+export function parseAdminCreatetPostResult(input: unknown) {
+  return v.parse(adminCreatePostResultSchema, input);
+}
