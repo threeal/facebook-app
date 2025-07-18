@@ -19,13 +19,20 @@ const MediaForm: React.FC<MediaFormProps> = ({ id, mediaType }) => {
   switch (mediaType) {
     case "image":
       return (
-        <div className="admin-image-container">
+        <div className="admin-media">
           <img src={`/static/posts/medias/${id.toFixed()}/390.webp`} />
         </div>
       );
 
     case "video":
-      return null;
+      return (
+        <div className="admin-media">
+          <video
+            src={`/static/posts/medias/${id.toString()}/390.webm`}
+            controls={true}
+          />
+        </div>
+      );
   }
 
   return null;

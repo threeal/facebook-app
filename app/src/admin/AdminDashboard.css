@@ -73,11 +73,18 @@ textarea.admin-input:disabled {
   font-size: 12px;
 }
 
-.admin-image-container {
+.admin-media {
   margin: 0 4px;
 }
 
-.admin-image-container img {
+.admin-media img {
+  display: block;
+  border-radius: 8px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.admin-media video {
   display: block;
   border-radius: 8px;
   width: 100%;
