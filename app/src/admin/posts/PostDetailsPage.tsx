@@ -8,6 +8,7 @@ import NumberInput from "../inputs/NumberInput";
 import TextAreaInput from "../inputs/TextAreaInput";
 import TimestampInput from "../inputs/TimestampInput";
 import UserSelectInput from "../inputs/UserSelectInput";
+import { shortenId } from "../utils";
 
 type Page = "main" | "confirm-delete" | "create-media" | "confirm-media-delete";
 
@@ -226,7 +227,7 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
     case "main":
       return (
         <>
-          <h1 className="admin-title">Post {id}</h1>
+          <h1 className="admin-title">Post {shortenId(id)}</h1>
           <button className="admin-button" onClick={onBack}>
             Back
           </button>
@@ -254,7 +255,7 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
     case "confirm-delete":
       return (
         <>
-          <h1 className="admin-title">Confirm Delete Post {id}</h1>
+          <h1 className="admin-title">Confirm Delete Post {shortenId(id)}</h1>
           <ActionButton
             label="Delete Post"
             processingLabel="Deleting Post..."
@@ -282,7 +283,7 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
     case "create-media":
       return (
         <>
-          <h1 className="admin-title">Create Post {id} Media</h1>
+          <h1 className="admin-title">Create Post {shortenId(id)} Media</h1>
           <button
             className="admin-button"
             onClick={() => {
@@ -304,7 +305,9 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
     case "confirm-media-delete":
       return (
         <>
-          <h1 className="admin-title">Confirm Delete Post {id} Media</h1>
+          <h1 className="admin-title">
+            Confirm Delete Post {shortenId(id)} Media
+          </h1>
           <ActionButton
             label="Delete Post Media"
             processingLabel="Deleting Post Media..."

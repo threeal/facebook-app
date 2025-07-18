@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { parseAdminPosts } from "shared";
 import CreatePostPage from "./CreatePostPage";
 import PostDetailsPage from "./PostDetailsPage";
+import { shortenId } from "../utils";
 
 interface PostCardsProps {
   adminSecret: string;
@@ -38,7 +39,7 @@ const PostCards: React.FC<PostCardsProps> = ({ adminSecret, onPostClick }) => {
             onPostClick(post.id);
           }}
         >
-          ID: {post.id}
+          ID: {shortenId(post.id)}
           <br />
           Author: {post.authorName}
           <br />
