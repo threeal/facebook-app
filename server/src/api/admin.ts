@@ -1,5 +1,6 @@
 import { FastifyInstance, FastifyRequest } from "fastify";
 import httpErrors from "http-errors";
+import { spawn } from "node:child_process";
 import { createWriteStream } from "node:fs";
 import { mkdir } from "node:fs/promises";
 import path from "node:path";
@@ -19,6 +20,7 @@ import {
 } from "shared";
 
 import { db } from "../db.js";
+import { waitProcess } from "../utils.js";
 
 const pump = promisify(pipeline);
 
@@ -136,11 +138,31 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     const { id } = request.params;
 
     const data = await request.file();
-    if (!data || data.mimetype !== "image/webp") throw httpErrors.BadRequest();
+    if (!data?.mimetype.startsWith("image/")) {
+      throw httpErrors.BadRequest();
+    }
 
-    const outFile = `data/static/posts/medias/${id}/390.webp`;
-    await mkdir(path.dirname(outFile));
-    await pump(data.file, createWriteStream(outFile));
+    const ext = path.extname(data.filename);
+    const oriFile = `data/static/posts/medias/${id}/original.${ext}`;
+
+    await mkdir(path.dirname(oriFile));
+    await pump(data.file, createWriteStream(oriFile));
+
+    const webpFile = `data/static/posts/medias/${id}/390.webp`;
+    const magick = spawn("magick", [
+      oriFile,
+      "-resize",
+      "1170x",
+      "-filter",
+      "Lanczos",
+      "-define",
+      "filter:blur=0.8",
+      "-sharpen",
+      "0x0.8",
+      webpFile,
+    ]);
+
+    await waitProcess(magick);
 
     await db
       .updateTable("posts")
