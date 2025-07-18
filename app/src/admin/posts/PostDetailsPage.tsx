@@ -1,8 +1,8 @@
 import { useQuery } from "@tanstack/react-query";
-import { getErrorMessage } from "catched-error-message";
 import React, { useState } from "react";
 import { parseAdminPostDetails } from "shared";
 import { useParseAdminSubmitPost } from "../hooks";
+import ActionButton from "../inputs/ActionButton";
 import NumberInput from "../inputs/NumberInput";
 import TextAreaInput from "../inputs/TextAreaInput";
 import TimestampInput from "../inputs/TimestampInput";
@@ -51,9 +51,6 @@ const MainPage: React.FC<MainPageProps> = ({
   onBack,
   onDelete,
 }) => {
-  const [isUpdating, setIsUpdating] = useState(false);
-  const [error, setError] = useState<unknown>(null);
-
   const { data: postDetails } = useQuery({
     queryKey: ["admin/posts", id, adminSecret],
     queryFn: async () => {
@@ -73,27 +70,6 @@ const MainPage: React.FC<MainPageProps> = ({
 
   const { post, setAuthorId, setTimestamp, setCaption, setReactions } =
     useParseAdminSubmitPost();
-
-  const updatePost = async () => {
-    setIsUpdating(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
-        method: "PUT",
-        headers: {
-          "admin-secret": adminSecret,
-          "content-type": "application/json",
-        },
-        body: JSON.stringify(post),
-      });
-      if (!res.ok) throw new Error(res.statusText);
-    } catch (err) {
-      console.error("Failed to update post:", err);
-      setError(err);
-    } finally {
-      setIsUpdating(false);
-    }
-  };
 
   return (
     <>
@@ -134,24 +110,23 @@ const MainPage: React.FC<MainPageProps> = ({
           setReactions(value);
         }}
       />
-      <button
-        className="admin-button"
-        disabled={!postDetails || !post || isUpdating}
-        onClick={() => {
-          void updatePost();
+      <ActionButton
+        label="Update Post"
+        processingLabel="Updating Post..."
+        errorLabel="Failed to Update Post"
+        disabled={!postDetails || !post}
+        onAction={async () => {
+          const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
+            method: "PUT",
+            headers: {
+              "admin-secret": adminSecret,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(post),
+          });
+          if (!res.ok) throw new Error(res.statusText);
         }}
-      >
-        {isUpdating
-          ? "Updating Post..."
-          : error
-            ? "Failed to Update Post"
-            : "Update Post"}
-      </button>
-      {error && (
-        <label className="admin-input-label">
-          Error: {getErrorMessage(error)}
-        </label>
-      )}
+      />
       {postDetails && (
         <MediaForm id={postDetails.id} mediaType={postDetails.mediaType} />
       )}
@@ -179,46 +154,22 @@ const ConfirmDeletePage: React.FC<ConfirmDeletePageProps> = ({
   onCancel,
   onDelete,
 }) => {
-  const [isDeleting, setIsDeleting] = useState(false);
-  const [error, setError] = useState<unknown>(null);
-
-  const deletePost = async () => {
-    setIsDeleting(true);
-    setError(null);
-    try {
-      const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
-        method: "DELETE",
-        headers: { "admin-secret": adminSecret },
-      });
-      if (!res.ok) throw new Error(res.statusText);
-      onDelete();
-    } catch (err) {
-      console.error(`Failed to delete post ${id.toString()}:`, err);
-      setError(err);
-    } finally {
-      setIsDeleting(false);
-    }
-  };
-
   return (
     <>
       <h1 className="admin-title">Confirm Delete Post {id}</h1>
-      <button
-        className="admin-button"
-        disabled={isDeleting}
-        onClick={() => void deletePost()}
-      >
-        {isDeleting
-          ? "Deleting Post..."
-          : error
-            ? "Failed to Delete Post"
-            : "Delete Post"}
-      </button>
-      {error && (
-        <label className="admin-input-label">
-          Error: {getErrorMessage(error)}
-        </label>
-      )}
+      <ActionButton
+        label="Delete Post"
+        processingLabel="Deleting Post..."
+        errorLabel="Failed to Delete Post"
+        onAction={async () => {
+          const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
+            method: "DELETE",
+            headers: { "admin-secret": adminSecret },
+          });
+          if (!res.ok) throw new Error(res.statusText);
+          onDelete();
+        }}
+      />
       <button className="admin-button" onClick={onCancel}>
         Cancel
       </button>
