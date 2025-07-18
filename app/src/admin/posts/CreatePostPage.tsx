@@ -55,7 +55,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
       />
       <FileInput
         label="Media"
-        accept="image/*"
+        accept="image/*,video/*"
         onFileChanged={(file) => {
           setMediaFile(file);
         }}
