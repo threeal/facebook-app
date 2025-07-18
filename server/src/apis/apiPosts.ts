@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import { parsePosts, PostsInput } from "shared";
 import { db } from "../db.js";
 
-export default function postsApiRoute(fastify: FastifyInstance) {
+export function apiPostsRoute(fastify: FastifyInstance) {
   fastify.get("/api/posts", async () => {
     const rows: PostsInput = await db
       .selectFrom("posts")
