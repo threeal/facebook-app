@@ -157,6 +157,7 @@ export default function adminApiRoute(fastify: FastifyInstance) {
     const webpFile = `data/static/posts/medias/${id}/390.webp`;
     const magick = spawn("magick", [
       oriFile,
+      "-auto-orient",
       "-resize",
       "1170x",
       "-filter",
