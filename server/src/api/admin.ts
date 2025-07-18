@@ -124,11 +124,17 @@ export default function adminApiRoute(fastify: FastifyInstance) {
   });
 
   fastify.delete<{
-    Params: { id: number };
+    Params: { id: string };
   }>("/api/admin/posts/:id", async (request) => {
     assertAdminSecret(request);
     const { id } = request.params;
-    await db.deleteFrom("posts").where("id", "=", id).execute();
+
+    await rm(`data/static/posts/medias/${id}`, {
+      recursive: true,
+      force: true,
+    });
+
+    await db.deleteFrom("posts").where("id", "=", parseInt(id)).execute();
   });
 
   fastify.post<{
