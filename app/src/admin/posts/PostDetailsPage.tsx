@@ -8,30 +8,41 @@ import TextAreaInput from "../inputs/TextAreaInput";
 import TimestampInput from "../inputs/TimestampInput";
 import UserSelectInput from "../inputs/UserSelectInput";
 
-type Page = "main" | "confirm-delete";
+type Page = "main" | "confirm-delete" | "confirm-media-delete";
 
 interface MediaFormProps {
   id: number;
   mediaType: "image" | "video" | null;
+  onDelete: () => void;
 }
 
-const MediaForm: React.FC<MediaFormProps> = ({ id, mediaType }) => {
+const MediaForm: React.FC<MediaFormProps> = ({ id, mediaType, onDelete }) => {
   switch (mediaType) {
     case "image":
       return (
-        <div className="admin-media">
-          <img src={`/static/posts/medias/${id.toFixed()}/390.webp`} />
-        </div>
+        <>
+          <div className="admin-media">
+            <img src={`/static/posts/medias/${id.toFixed()}/390.webp`} />
+          </div>
+          <button className="admin-button" onClick={onDelete}>
+            Delete Post Media
+          </button>
+        </>
       );
 
     case "video":
       return (
-        <div className="admin-media">
-          <video
-            src={`/static/posts/medias/${id.toString()}/390.webm`}
-            controls={true}
-          />
-        </div>
+        <>
+          <div className="admin-media">
+            <video
+              src={`/static/posts/medias/${id.toString()}/390.webm`}
+              controls={true}
+            />
+          </div>
+          <button className="admin-button" onClick={onDelete}>
+            Delete Post Media
+          </button>
+        </>
       );
   }
 
@@ -41,9 +52,14 @@ const MediaForm: React.FC<MediaFormProps> = ({ id, mediaType }) => {
 interface UpdatePostFormProps {
   id: number;
   adminSecret: string;
+  onDeleteMedia: () => void;
 }
 
-const UpdatePostForm: React.FC<UpdatePostFormProps> = ({ id, adminSecret }) => {
+const UpdatePostForm: React.FC<UpdatePostFormProps> = ({
+  id,
+  adminSecret,
+  onDeleteMedia,
+}) => {
   const { data: postDetails } = useQuery({
     queryKey: ["admin/posts", id, adminSecret],
     queryFn: async () => {
@@ -117,7 +133,11 @@ const UpdatePostForm: React.FC<UpdatePostFormProps> = ({ id, adminSecret }) => {
         }}
       />
       {postDetails && (
-        <MediaForm id={postDetails.id} mediaType={postDetails.mediaType} />
+        <MediaForm
+          id={postDetails.id}
+          mediaType={postDetails.mediaType}
+          onDelete={onDeleteMedia}
+        />
       )}
     </>
   );
@@ -144,7 +164,13 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
           <button className="admin-button" onClick={onBack}>
             Back
           </button>
-          <UpdatePostForm id={id} adminSecret={adminSecret} />
+          <UpdatePostForm
+            id={id}
+            adminSecret={adminSecret}
+            onDeleteMedia={() => {
+              setPage("confirm-media-delete");
+            }}
+          />
           <button
             className="admin-button"
             onClick={() => {
@@ -171,6 +197,37 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
               });
               if (!res.ok) throw new Error(res.statusText);
               onBack();
+            }}
+          />
+          <button
+            className="admin-button"
+            onClick={() => {
+              setPage("main");
+            }}
+          >
+            Cancel
+          </button>
+        </>
+      );
+
+    case "confirm-media-delete":
+      return (
+        <>
+          <h1 className="admin-title">Confirm Delete Post {id} Media</h1>
+          <ActionButton
+            label="Delete Post Media"
+            processingLabel="Deleting Post Media..."
+            errorLabel="Failed to Delete Post Media"
+            onAction={async () => {
+              const res = await fetch(
+                `/api/admin/posts/${id.toFixed()}/media`,
+                {
+                  method: "DELETE",
+                  headers: { "admin-secret": adminSecret },
+                },
+              );
+              if (!res.ok) throw new Error(res.statusText);
+              setPage("main");
             }}
           />
           <button
