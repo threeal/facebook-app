@@ -38,19 +38,12 @@ const MediaForm: React.FC<MediaFormProps> = ({ id, mediaType }) => {
   return null;
 };
 
-interface MainPageProps {
+interface UpdatePostFormProps {
   id: number;
   adminSecret: string;
-  onBack: () => void;
-  onDelete: () => void;
 }
 
-const MainPage: React.FC<MainPageProps> = ({
-  id,
-  adminSecret,
-  onBack,
-  onDelete,
-}) => {
+const UpdatePostForm: React.FC<UpdatePostFormProps> = ({ id, adminSecret }) => {
   const { data: postDetails } = useQuery({
     queryKey: ["admin/posts", id, adminSecret],
     queryFn: async () => {
@@ -73,10 +66,6 @@ const MainPage: React.FC<MainPageProps> = ({
 
   return (
     <>
-      <h1 className="admin-title">Post {id}</h1>
-      <button className="admin-button" onClick={onBack}>
-        Back
-      </button>
       <UserSelectInput
         adminSecret={adminSecret}
         label="Author"
@@ -130,49 +119,6 @@ const MainPage: React.FC<MainPageProps> = ({
       {postDetails && (
         <MediaForm id={postDetails.id} mediaType={postDetails.mediaType} />
       )}
-      <button
-        className="admin-button"
-        disabled={!postDetails}
-        onClick={onDelete}
-      >
-        Delete Post
-      </button>
-    </>
-  );
-};
-
-interface ConfirmDeletePageProps {
-  id: number;
-  adminSecret: string;
-  onCancel: () => void;
-  onDelete: () => void;
-}
-
-const ConfirmDeletePage: React.FC<ConfirmDeletePageProps> = ({
-  id,
-  adminSecret,
-  onCancel,
-  onDelete,
-}) => {
-  return (
-    <>
-      <h1 className="admin-title">Confirm Delete Post {id}</h1>
-      <ActionButton
-        label="Delete Post"
-        processingLabel="Deleting Post..."
-        errorLabel="Failed to Delete Post"
-        onAction={async () => {
-          const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
-            method: "DELETE",
-            headers: { "admin-secret": adminSecret },
-          });
-          if (!res.ok) throw new Error(res.statusText);
-          onDelete();
-        }}
-      />
-      <button className="admin-button" onClick={onCancel}>
-        Cancel
-      </button>
     </>
   );
 };
@@ -193,26 +139,49 @@ const PostDetailsPage: React.FC<PostDetailsPageProps> = ({
   switch (page) {
     case "main":
       return (
-        <MainPage
-          id={id}
-          adminSecret={adminSecret}
-          onBack={onBack}
-          onDelete={() => {
-            setPage("confirm-delete");
-          }}
-        />
+        <>
+          <h1 className="admin-title">Post {id}</h1>
+          <button className="admin-button" onClick={onBack}>
+            Back
+          </button>
+          <UpdatePostForm id={id} adminSecret={adminSecret} />
+          <button
+            className="admin-button"
+            onClick={() => {
+              setPage("confirm-delete");
+            }}
+          >
+            Delete Post
+          </button>
+        </>
       );
 
     case "confirm-delete":
       return (
-        <ConfirmDeletePage
-          id={id}
-          adminSecret={adminSecret}
-          onCancel={() => {
-            setPage("main");
-          }}
-          onDelete={onBack}
-        />
+        <>
+          <h1 className="admin-title">Confirm Delete Post {id}</h1>
+          <ActionButton
+            label="Delete Post"
+            processingLabel="Deleting Post..."
+            errorLabel="Failed to Delete Post"
+            onAction={async () => {
+              const res = await fetch(`/api/admin/posts/${id.toFixed()}`, {
+                method: "DELETE",
+                headers: { "admin-secret": adminSecret },
+              });
+              if (!res.ok) throw new Error(res.statusText);
+              onBack();
+            }}
+          />
+          <button
+            className="admin-button"
+            onClick={() => {
+              setPage("main");
+            }}
+          >
+            Cancel
+          </button>
+        </>
       );
   }
 };
