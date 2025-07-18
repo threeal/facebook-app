@@ -2,20 +2,15 @@ import React from "react";
 import { useAdminUsers } from "../hooks";
 import { shortenId } from "../utils";
 
-export interface UsersPageProps {
+interface UserCardsProps {
   adminSecret: string;
-  onBack: () => void;
 }
 
-const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
+const UserCards: React.FC<UserCardsProps> = ({ adminSecret }) => {
   const users = useAdminUsers(adminSecret);
 
   return (
     <>
-      <h1 className="admin-title">Users</h1>
-      <button className="admin-button" onClick={onBack}>
-        Back
-      </button>
       {users.map(({ id, name, hasAvatar }) => (
         <div key={id} className="admin-card">
           ID: {shortenId(id)}
@@ -25,6 +20,23 @@ const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
           {hasAvatar ? "Has Avatar" : "No Avatar"}
         </div>
       ))}
+    </>
+  );
+};
+
+export interface UsersPageProps {
+  adminSecret: string;
+  onBack: () => void;
+}
+
+const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
+  return (
+    <>
+      <h1 className="admin-title">Users</h1>
+      <button className="admin-button" onClick={onBack}>
+        Back
+      </button>
+      <UserCards adminSecret={adminSecret} />
     </>
   );
 };
