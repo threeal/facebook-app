@@ -2,9 +2,9 @@ import { FastifyInstance } from "fastify";
 import { nanoid } from "nanoid";
 
 import {
-  AdminCreatePostResultInput,
+  AdminCreateResultInput,
   AdminPostsInput,
-  parseAdminCreatetPostResult,
+  parseAdminCreatetResult,
   parseAdminPosts,
   parseAdminSubmitPost,
 } from "shared";
@@ -34,7 +34,7 @@ export function apiAdminPostsRoute(fastify: FastifyInstance) {
   fastify.post("/api/admin/posts", async (request) => {
     assertAdminSecret(request);
     const post = parseAdminSubmitPost(request.body);
-    const row: AdminCreatePostResultInput = await db
+    const row: AdminCreateResultInput = await db
       .insertInto("posts")
       .values({
         id: nanoid(),
@@ -47,6 +47,6 @@ export function apiAdminPostsRoute(fastify: FastifyInstance) {
       .returning("id")
       .executeTakeFirstOrThrow();
 
-    return parseAdminCreatetPostResult(row);
+    return parseAdminCreatetResult(row);
   });
 }

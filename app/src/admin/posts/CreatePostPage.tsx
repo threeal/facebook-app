@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { parseAdminCreatetPostResult } from "shared";
+import { parseAdminCreatetResult } from "shared";
 import { useParseAdminSubmitPost } from "../hooks";
 import ActionButton from "../inputs/ActionButton";
 import FileInput from "../inputs/FileInput";
@@ -75,7 +75,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
             body: JSON.stringify(post),
           });
           if (!res.ok) throw new Error(res.statusText);
-          const { id } = parseAdminCreatetPostResult(await res.json());
+          const { id } = parseAdminCreatetResult(await res.json());
 
           if (mediaFile) {
             const formData = new FormData();
