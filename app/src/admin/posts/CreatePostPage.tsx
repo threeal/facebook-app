@@ -98,7 +98,7 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
       />
       <FileInput
         label="Media"
-        accept="image/webp"
+        accept="image/*"
         disabled={isCreating}
         onFileChanged={(file) => {
           setMediaFile(file);
