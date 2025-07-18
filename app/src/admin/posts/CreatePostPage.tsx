@@ -64,34 +64,30 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
   return (
     <>
       <h1 className="admin-title">Create Post</h1>
-      <button className="admin-button" disabled={isCreating} onClick={onBack}>
+      <button className="admin-button" onClick={onBack}>
         Back
       </button>
       <UserSelectInput
         adminSecret={adminSecret}
         label="Author"
-        disabled={isCreating}
         onUserSelected={(userId) => {
           setAuthorId(userId);
         }}
       />
       <TimestampInput
         label="Date"
-        disabled={isCreating}
         onTimestampChanged={(timestamp) => {
           setTimestamp(timestamp);
         }}
       />
       <TextAreaInput
         label="Caption"
-        disabled={isCreating}
         onTextChanged={(text) => {
           setCaption(text);
         }}
       />
       <NumberInput
         label="Reactions"
-        disabled={isCreating}
         onValueChanged={(value) => {
           setReactions(value);
         }}
@@ -99,7 +95,6 @@ const CreatePostPage: React.FC<CreatePostPageProps> = ({
       <FileInput
         label="Media"
         accept="image/*"
-        disabled={isCreating}
         onFileChanged={(file) => {
           setMediaFile(file);
         }}

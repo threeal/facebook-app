@@ -98,13 +98,13 @@ const MainPage: React.FC<MainPageProps> = ({
   return (
     <>
       <h1 className="admin-title">Post {id}</h1>
-      <button className="admin-button" disabled={isUpdating} onClick={onBack}>
+      <button className="admin-button" onClick={onBack}>
         Back
       </button>
       <UserSelectInput
         adminSecret={adminSecret}
         label="Author"
-        disabled={!postDetails || isUpdating}
+        disabled={!postDetails}
         initialUserId={postDetails?.authorId}
         onUserSelected={(userId) => {
           setAuthorId(userId);
@@ -112,7 +112,7 @@ const MainPage: React.FC<MainPageProps> = ({
       />
       <TimestampInput
         label="Date"
-        disabled={!postDetails || isUpdating}
+        disabled={!postDetails}
         initialTimestamp={postDetails?.timestamp}
         onTimestampChanged={(timestamp) => {
           setTimestamp(timestamp);
@@ -120,7 +120,7 @@ const MainPage: React.FC<MainPageProps> = ({
       />
       <TextAreaInput
         label="Caption"
-        disabled={!postDetails || isUpdating}
+        disabled={!postDetails}
         initialText={postDetails?.caption}
         onTextChanged={(text) => {
           setCaption(text);
@@ -128,7 +128,7 @@ const MainPage: React.FC<MainPageProps> = ({
       />
       <NumberInput
         label="Reactions"
-        disabled={!postDetails || isUpdating}
+        disabled={!postDetails}
         initialValue={postDetails?.reactions}
         onValueChanged={(value) => {
           setReactions(value);
@@ -157,7 +157,7 @@ const MainPage: React.FC<MainPageProps> = ({
       )}
       <button
         className="admin-button"
-        disabled={!postDetails || isUpdating}
+        disabled={!postDetails}
         onClick={onDelete}
       >
         Delete Post
@@ -219,7 +219,7 @@ const ConfirmDeletePage: React.FC<ConfirmDeletePageProps> = ({
           Error: {getErrorMessage(error)}
         </label>
       )}
-      <button className="admin-button" disabled={isDeleting} onClick={onCancel}>
+      <button className="admin-button" onClick={onCancel}>
         Cancel
       </button>
     </>
