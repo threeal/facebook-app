@@ -4,17 +4,24 @@ import fastifyStatic from "@fastify/static";
 import "dotenv/config";
 import Fastify from "fastify";
 import path from "node:path";
-import adminApiRoute from "./api/admin.js";
-import postsApiRoute from "./api/posts.js";
+import { apiAdminRoute } from "./apis/apiAdmin.js";
+import { apiAdminPostsRoute } from "./apis/apiAdminPosts.js";
+import { apiAdminPostsIdRoute } from "./apis/apiAdminPostsId.js";
+import { apiAdminPostsIdMediaRoute } from "./apis/apiAdminPostsIdMedia.js";
+import { apiPostsRoute } from "./apis/apiPosts.js";
 
 const fastify = Fastify({ logger: true });
 
 fastify.register(fastifyMultipart);
-fastify.register(postsApiRoute);
 
 if (process.env.ADMIN_SECRET) {
-  fastify.register(adminApiRoute);
+  fastify.register(apiAdminRoute);
+  fastify.register(apiAdminPostsRoute);
+  fastify.register(apiAdminPostsIdRoute);
+  fastify.register(apiAdminPostsIdMediaRoute);
 }
+
+fastify.register(apiPostsRoute);
 
 fastify.register(fastifyStatic, {
   root: path.resolve("data/static"),
