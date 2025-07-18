@@ -10,6 +10,34 @@ import UserSelectInput from "../inputs/UserSelectInput";
 
 type Page = "main" | "confirm-delete";
 
+interface MediaFormProps {
+  id: number;
+  mediaType: "image" | "video" | null;
+}
+
+const MediaForm: React.FC<MediaFormProps> = ({ id, mediaType }) => {
+  switch (mediaType) {
+    case "image":
+      return (
+        <div className="admin-media">
+          <img src={`/static/posts/medias/${id.toFixed()}/390.webp`} />
+        </div>
+      );
+
+    case "video":
+      return (
+        <div className="admin-media">
+          <video
+            src={`/static/posts/medias/${id.toString()}/390.webm`}
+            controls={true}
+          />
+        </div>
+      );
+  }
+
+  return null;
+};
+
 interface MainPageProps {
   id: number;
   adminSecret: string;
@@ -123,6 +151,9 @@ const MainPage: React.FC<MainPageProps> = ({
         <label className="admin-input-label">
           Error: {getErrorMessage(error)}
         </label>
+      )}
+      {postDetails && (
+        <MediaForm id={postDetails.id} mediaType={postDetails.mediaType} />
       )}
       <button
         className="admin-button"

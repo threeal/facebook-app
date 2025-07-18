@@ -72,3 +72,21 @@ textarea.admin-input:disabled {
   color: black;
   font-size: 12px;
 }
+
+.admin-media {
+  margin: 0 4px;
+}
+
+.admin-media img {
+  display: block;
+  border-radius: 8px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.admin-media video {
+  display: block;
+  border-radius: 8px;
+  width: 100%;
+  object-fit: cover;
+}
