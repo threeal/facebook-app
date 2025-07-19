@@ -19,7 +19,7 @@ jobs:
         run: pnpm install
 
       - name: Build Shared Package
-        run: pnpm --filter shared exec tsc --project tsconfig.build.json
+        run: pnpm --filter shared build
 
       - name: Check Types
         run: pnpm --recursive --filter !shared exec tsc
@@ -36,6 +36,4 @@ jobs:
         run: pnpm --recursive exec eslint
 
       - name: Build Project
-        run: |
-          pnpm --filter app exec vite build
-          pnpm --filter server exec tsc --project tsconfig.build.json
+        run: pnpm --recursive --filter !shared build

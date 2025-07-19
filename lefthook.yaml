@@ -5,7 +5,7 @@ pre-commit:
       run: pnpm install
 
     - name: build shared package
-      run: pnpm --filter shared exec tsc --project tsconfig.build.json
+      run: pnpm --filter shared build
 
     - name: check types
       run: pnpm --recursive --filter !shared exec tsc
