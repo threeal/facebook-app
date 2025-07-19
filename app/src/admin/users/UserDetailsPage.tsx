@@ -1,22 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import React from "react";
+import React, { useState } from "react";
 import { parseAdminUserDetails } from "shared";
 import ActionButton from "../inputs/ActionButton";
 import TextInput from "../inputs/TextInput";
 import { useParseAdminSubmitUser } from "../hooks";
 import { shortenId } from "../utils";
 
-export interface UserDetailsPageProps {
+type Page = "main" | "confirm-delete";
+
+interface UpdateUserFormProps {
   id: string;
   adminSecret: string;
-  onBack: () => void;
 }
 
-const UserDetailsPage: React.FC<UserDetailsPageProps> = ({
-  id,
-  adminSecret,
-  onBack,
-}) => {
+const UpdateUserForm: React.FC<UpdateUserFormProps> = ({ id, adminSecret }) => {
   const { data: userDetails } = useQuery({
     queryKey: ["admin/posts", id, adminSecret],
     queryFn: async () => {
@@ -38,10 +35,6 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({
 
   return (
     <>
-      <h1 className="admin-title">User {shortenId(id)}</h1>
-      <button className="admin-button" onClick={onBack}>
-        Back
-      </button>
       <TextInput
         label="Name"
         disabled={!userDetails}
@@ -69,6 +62,69 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({
       />
     </>
   );
+};
+
+export interface UserDetailsPageProps {
+  id: string;
+  adminSecret: string;
+  onBack: () => void;
+}
+
+const UserDetailsPage: React.FC<UserDetailsPageProps> = ({
+  id,
+  adminSecret,
+  onBack,
+}) => {
+  const [page, setPage] = useState<Page>("main");
+
+  switch (page) {
+    case "main":
+      return (
+        <>
+          <h1 className="admin-title">User {shortenId(id)}</h1>
+          <button className="admin-button" onClick={onBack}>
+            Back
+          </button>
+          <UpdateUserForm id={id} adminSecret={adminSecret} />
+          <button
+            className="admin-button"
+            onClick={() => {
+              setPage("confirm-delete");
+            }}
+          >
+            Delete User
+          </button>
+        </>
+      );
+
+    case "confirm-delete":
+      return (
+        <>
+          <h1 className="admin-title">Confirm Delete User {shortenId(id)}</h1>
+          <ActionButton
+            label="Delete User"
+            processingLabel="Deleting User..."
+            errorLabel="Failed to Delete User"
+            onAction={async () => {
+              const res = await fetch(`/api/admin/users/${id}`, {
+                method: "DELETE",
+                headers: { "admin-secret": adminSecret },
+              });
+              if (!res.ok) throw new Error(res.statusText);
+              onBack();
+            }}
+          />
+          <button
+            className="admin-button"
+            onClick={() => {
+              setPage("main");
+            }}
+          >
+            Cancel
+          </button>
+        </>
+      );
+  }
 };
 
 export default UserDetailsPage;
