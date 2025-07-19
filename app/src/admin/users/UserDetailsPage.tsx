@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import React from "react";
 import { parseAdminUserDetails } from "shared";
+import ActionButton from "../inputs/ActionButton";
 import TextInput from "../inputs/TextInput";
 import { useParseAdminSubmitUser } from "../hooks";
 import { shortenId } from "../utils";
@@ -33,7 +34,7 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({
     initialData: null,
   });
 
-  const { setName } = useParseAdminSubmitUser();
+  const { user, setName } = useParseAdminSubmitUser();
 
   return (
     <>
@@ -47,6 +48,23 @@ const UserDetailsPage: React.FC<UserDetailsPageProps> = ({
         initialText={userDetails?.name}
         onTextChanged={(text) => {
           setName(text);
+        }}
+      />
+      <ActionButton
+        label="Update User"
+        processingLabel="Updating User..."
+        errorLabel="Failed to Update User"
+        disabled={!userDetails || !user}
+        onAction={async () => {
+          const res = await fetch(`/api/admin/users/${id}`, {
+            method: "PUT",
+            headers: {
+              "admin-secret": adminSecret,
+              "content-type": "application/json",
+            },
+            body: JSON.stringify(user),
+          });
+          if (!res.ok) throw new Error(res.statusText);
         }}
       />
     </>
