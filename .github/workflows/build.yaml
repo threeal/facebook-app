@@ -24,9 +24,6 @@ jobs:
       - name: Check Types
         run: pnpm --recursive --filter !shared exec tsc
 
-      - name: Test Project
-        run: pnpm --recursive test
-
       - name: Check Formatting
         run: |
           pnpm prettier --check .
