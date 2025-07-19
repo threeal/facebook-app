@@ -13,7 +13,12 @@ import { apiPostsRoute } from "./apis/apiPosts.js";
 
 const fastify = Fastify({ logger: true });
 
-fastify.register(fastifyMultipart);
+fastify.register(fastifyMultipart, {
+  limits: {
+    fileSize: Infinity,
+    files: 1,
+  },
+});
 
 if (process.env.ADMIN_SECRET) {
   fastify.register(apiAdminRoute);
