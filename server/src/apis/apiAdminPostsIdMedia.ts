@@ -23,7 +23,7 @@ export function apiAdminPostsIdMediaRoute(fastify: FastifyInstance) {
     if (!data) throw httpErrors.BadRequest();
 
     const ext = path.extname(data.filename);
-    const oriFile = `data/static/posts/medias/${id}/original.${ext}`;
+    const oriFile = `data/static/posts/medias/${id}/original${ext}`;
 
     await mkdir(path.dirname(oriFile));
     await pump(data.file, createWriteStream(oriFile));
