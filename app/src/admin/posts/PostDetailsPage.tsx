@@ -187,8 +187,8 @@ const CreatePostMediaForm: React.FC<CreatePostMediaFormProps> = ({
       />
       <ActionButton
         label="Create Post Media"
-        processingLabel="Deleting Post Media..."
-        errorLabel="Failed to Delete Post Media"
+        processingLabel="Creating Post Media..."
+        errorLabel="Failed to Create Post Media"
         disabled={!mediaFile}
         onAction={async () => {
           if (mediaFile) {
