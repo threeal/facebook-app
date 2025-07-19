@@ -2,20 +2,26 @@ import React, { useState } from "react";
 import { useAdminUsers } from "../hooks";
 import { shortenId } from "../utils";
 import CreateUserPage from "./CreateUserPage";
-
-type Page = "main" | "create";
+import UserDetailsPage from "./UserDetailsPage";
 
 interface UserCardsProps {
   adminSecret: string;
+  onUserClick: (id: string) => void;
 }
 
-const UserCards: React.FC<UserCardsProps> = ({ adminSecret }) => {
+const UserCards: React.FC<UserCardsProps> = ({ adminSecret, onUserClick }) => {
   const users = useAdminUsers(adminSecret);
 
   return (
     <>
       {users.map(({ id, name, hasAvatar }) => (
-        <div key={id} className="admin-card">
+        <div
+          key={id}
+          className="admin-card"
+          onClick={() => {
+            onUserClick(id);
+          }}
+        >
           ID: {shortenId(id)}
           <br />
           Name: {name}
@@ -33,7 +39,7 @@ export interface UsersPageProps {
 }
 
 const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
-  const [page, setPage] = useState<Page>("main");
+  const [page, setPage] = useState("main");
 
   switch (page) {
     case "main":
@@ -51,13 +57,29 @@ const UsersPage: React.FC<UsersPageProps> = ({ adminSecret, onBack }) => {
           >
             Create User
           </button>
-          <UserCards adminSecret={adminSecret} />
+          <UserCards
+            adminSecret={adminSecret}
+            onUserClick={(id) => {
+              setPage(id);
+            }}
+          />
         </>
       );
 
     case "create":
       return (
         <CreateUserPage
+          adminSecret={adminSecret}
+          onBack={() => {
+            setPage("main");
+          }}
+        />
+      );
+
+    default:
+      return (
+        <UserDetailsPage
+          id={page}
           adminSecret={adminSecret}
           onBack={() => {
             setPage("main");
