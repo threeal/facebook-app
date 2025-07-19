@@ -1,5 +1,11 @@
 import { FastifyInstance } from "fastify";
-import { AdminUserDetailsInput, parseAdminUserDetails } from "shared";
+
+import {
+  AdminUserDetailsInput,
+  parseAdminSubmitUser,
+  parseAdminUserDetails,
+} from "shared";
+
 import { db } from "../db.js";
 import { assertAdminSecret } from "../utils/admin.js";
 
@@ -16,5 +22,18 @@ export function apiAdminUsersIdRoute(fastify: FastifyInstance) {
       .executeTakeFirstOrThrow();
 
     return parseAdminUserDetails(rows);
+  });
+
+  fastify.put<{
+    Params: { id: string };
+  }>("/api/admin/users/:id", async (request) => {
+    assertAdminSecret(request);
+    const { id } = request.params;
+    const post = parseAdminSubmitUser(request.body);
+    await db
+      .updateTable("users")
+      .set({ name: post.name })
+      .where("id", "=", id)
+      .execute();
   });
 }
