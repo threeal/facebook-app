@@ -2,7 +2,7 @@ import { FastifyInstance } from "fastify";
 import httpErrors from "http-errors";
 import { spawn } from "node:child_process";
 import { createWriteStream } from "node:fs";
-import { mkdir } from "node:fs/promises";
+import { mkdir, rm } from "node:fs/promises";
 import path from "node:path";
 import { pipeline } from "node:stream";
 import { promisify } from "node:util";
@@ -49,6 +49,24 @@ export function apiAdminUsersIdAvatarRoute(fastify: FastifyInstance) {
     await db
       .updateTable("users")
       .set({ has_avatar: 1 })
+      .where("id", "=", id)
+      .execute();
+  });
+
+  fastify.delete<{
+    Params: { id: string };
+  }>("/api/admin/users/:id/avatar", async (request) => {
+    assertAdminSecret(request);
+    const { id } = request.params;
+
+    await rm(`data/static/users/avatars/${id}`, {
+      recursive: true,
+      force: true,
+    });
+
+    await db
+      .updateTable("users")
+      .set({ has_avatar: 0 })
       .where("id", "=", id)
       .execute();
   });
