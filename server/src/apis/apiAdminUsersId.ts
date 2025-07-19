@@ -1,4 +1,5 @@
 import { FastifyInstance } from "fastify";
+import { rm } from "node:fs/promises";
 
 import {
   AdminUserDetailsInput,
@@ -35,5 +36,19 @@ export function apiAdminUsersIdRoute(fastify: FastifyInstance) {
       .set({ name: post.name })
       .where("id", "=", id)
       .execute();
+  });
+
+  fastify.delete<{
+    Params: { id: string };
+  }>("/api/admin/users/:id", async (request) => {
+    assertAdminSecret(request);
+    const { id } = request.params;
+
+    await rm(`data/static/users/avatars/${id}`, {
+      recursive: true,
+      force: true,
+    });
+
+    await db.deleteFrom("users").where("id", "=", id).execute();
   });
 }
