@@ -4,6 +4,9 @@
   "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json"
+  },
   "dependencies": {
     "valibot": "^1.1.0"
   },
