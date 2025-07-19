@@ -60,6 +60,14 @@ const UpdateUserForm: React.FC<UpdateUserFormProps> = ({ id, adminSecret }) => {
           if (!res.ok) throw new Error(res.statusText);
         }}
       />
+      {userDetails && userDetails.hasAvatar && (
+        <>
+          <label className="admin-input-label">Avatar</label>
+          <div className="admin-avatar">
+            <img src={`/static/users/avatars/${id}/40x40.webp`} />
+          </div>
+        </>
+      )}
     </>
   );
 };
