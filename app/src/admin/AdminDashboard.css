@@ -90,3 +90,19 @@ textarea.admin-input:disabled {
   width: 100%;
   object-fit: cover;
 }
+
+.admin-avatar {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin: 0 4px;
+  border-radius: 8px;
+  background-color: white;
+}
+
+.admin-avatar img {
+  border-radius: 8px;
+  width: 120px;
+  height: 120px;
+  object-fit: cover;
+}

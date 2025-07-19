@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
+import { parseAdminCreatetResult } from "shared";
 import { useParseAdminSubmitUser } from "../hooks";
 import ActionButton from "../inputs/ActionButton";
+import FileInput from "../inputs/FileInput";
 import TextInput from "../inputs/TextInput";
 
 export interface CreateUserPageProps {
@@ -13,6 +15,7 @@ const CreateUserPage: React.FC<CreateUserPageProps> = ({
   onBack,
 }) => {
   const { user, setName } = useParseAdminSubmitUser();
+  const [avatarFile, setAvatarFile] = useState<File | null>(null);
 
   return (
     <>
@@ -24,6 +27,13 @@ const CreateUserPage: React.FC<CreateUserPageProps> = ({
         label="Name"
         onTextChanged={(text) => {
           setName(text);
+        }}
+      />
+      <FileInput
+        label="Avatar"
+        accept="image/*"
+        onFileChanged={(file) => {
+          setAvatarFile(file);
         }}
       />
       <ActionButton
@@ -41,6 +51,20 @@ const CreateUserPage: React.FC<CreateUserPageProps> = ({
             body: JSON.stringify(user),
           });
           if (!res.ok) throw new Error(res.statusText);
+          const { id } = parseAdminCreatetResult(await res.json());
+
+          if (avatarFile) {
+            const formData = new FormData();
+            formData.append("file", avatarFile);
+
+            const res = await fetch(`/api/admin/users/${id}/avatar`, {
+              method: "POST",
+              headers: { "admin-secret": adminSecret },
+              body: formData,
+            });
+            if (!res.ok) throw new Error(res.statusText);
+          }
+
           onBack();
         }}
       />
