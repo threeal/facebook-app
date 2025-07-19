@@ -8,6 +8,7 @@ import { apiAdminRoute } from "./apis/apiAdmin.js";
 import { apiAdminPostsRoute } from "./apis/apiAdminPosts.js";
 import { apiAdminPostsIdRoute } from "./apis/apiAdminPostsId.js";
 import { apiAdminPostsIdMediaRoute } from "./apis/apiAdminPostsIdMedia.js";
+import { apiAdminUsersRoute } from "./apis/apiAdminUsers.js";
 import { apiPostsRoute } from "./apis/apiPosts.js";
 
 const fastify = Fastify({ logger: true });
@@ -19,6 +20,7 @@ if (process.env.ADMIN_SECRET) {
   fastify.register(apiAdminPostsRoute);
   fastify.register(apiAdminPostsIdRoute);
   fastify.register(apiAdminPostsIdMediaRoute);
+  fastify.register(apiAdminUsersRoute);
 }
 
 fastify.register(apiPostsRoute);

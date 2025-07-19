@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import UsersPage from "./pages/UsersPage";
 import PostsPage from "./posts/PostsPage";
+import UsersPage from "./users/UsersPage";
 import "./AdminDashboard.css";
 
 type Page = "main" | "users" | "posts";
